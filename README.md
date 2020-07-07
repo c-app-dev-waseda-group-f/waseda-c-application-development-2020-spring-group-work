@@ -1,1 +1,1 @@
-# waseda-c-application-development-2020-spring-group-work
+# 早稲田大学 C アプリケーションデベロップメント 2020 グループワーク関係資料
