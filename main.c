@@ -131,7 +131,7 @@ void init(void) {
 	gluLookAt(0.0, -10.0, 2.0, 0.0, 0.0, 1.5, 0.0, 0.0, 1.0);
 	glLightfv(GL_LIGHT1, GL_POSITION, pos1);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, color[WHITE]);
-    glutTimerFunc(1, timerFunc, 0);
+	glutTimerFunc(1, timerFunc, 0);
 }
 
 int main(int argc, char *argv[]) {
