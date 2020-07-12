@@ -35,8 +35,8 @@ void drawEnemies(EnemyList enemyList, double radius) {
     }
 }
 
-// 敵との衝突判定 衝突したらtrue
-bool collision(Character character, GameBoard gameBoard) {
+// 壁との衝突判定 衝突したらtrue
+bool collidedWithWall(Character character, GameBoard gameBoard) {
 
     // TODO: 壁との衝突判定
 
@@ -53,28 +53,28 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
     switch (movement) {
         case UP:
             character.coordinate.y += 0.1;
-            if (collision(character, gameBoard))
+            if (collidedWithWall(character, gameBoard))
                 character.coordinate.y -= 0.1;
             if (character.coordinate.y > groundYMax)
                 character.coordinate.y = groundYMax;
             break;
         case DOWN:
             character.coordinate.y -= 0.1;
-            if (collision(character, gameBoard))
+            if (collidedWithWall(character, gameBoard))
                 character.coordinate.y += 0.1;
             if (character.coordinate.y < groundYMin)
                 character.coordinate.y = groundYMin;
             break;
         case LEFT:
             character.coordinate.x -= 0.1;
-            if (collision(character, gameBoard))
+            if (collidedWithWall(character, gameBoard))
                 character.coordinate.x += 0.1;
             if (character.coordinate.x < groundXMin)
                 character.coordinate.x = groundXMin;
             break;
         case RIGHT:
             character.coordinate.x += 0.1;
-            if (collision(character, gameBoard))
+            if (collidedWithWall(character, gameBoard))
                 character.coordinate.x -= 0.1;
             if (character.coordinate.x > groundXMax)
                 character.coordinate.x = groundXMax;
