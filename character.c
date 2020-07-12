@@ -1,11 +1,10 @@
 #include <GL/glut.h>
+#include <stdbool.h>
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
 
-#include <stdio.h>
-
-void drawPlayer(Player player, int lengthOfElement) {
+void drawPlayer(Character player, double radius) {
 
     glPushMatrix();
 
@@ -16,12 +15,12 @@ void drawPlayer(Player player, int lengthOfElement) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
 
-    glutSolidSphere((double)lengthOfElement / 2, 100, 100);
+    glutSolidSphere(radius, 100, 100);
 
     glPopMatrix();
 }
 
-void drawEnemies(EnemyList enemyList, int lengthOfElement) {
+void drawEnemies(EnemyList enemyList, double radius) {
 
     glTranslatef(0.0, 0.0, 0.5);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color[RED]);
@@ -30,15 +29,63 @@ void drawEnemies(EnemyList enemyList, int lengthOfElement) {
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     for (int i = 0; i < enemyList.count; i++) {
         glPushMatrix();
-        glTranslatef(enemyList.coordinates[i].x, enemyList.coordinates[i].y, enemyList.coordinates[i].z);
-        glutSolidSphere((double)lengthOfElement / 2, 100, 100);
+        glTranslatef(enemyList.enemies[i].coordinate.x, enemyList.enemies[i].coordinate.y, enemyList.enemies[i].coordinate.z);
+        glutSolidSphere(radius, 100, 100);
         glPopMatrix();
     }
 }
 
-Player newPlayer(GameBoard gameBoard) {
+// 敵との衝突判定 衝突したらtrue
+bool collision(Character character, GameBoard gameBoard) {
 
-    Player player;
+    // TODO: 壁との衝突判定
+
+    return false;
+}
+
+Character move(Character character, CharacterMovement movement, GameBoard gameBoard) {
+
+    int groundXMin = 0;
+    int groundXMax = (gameBoard.mapSize.x - 1) * gameBoard.lengthOfBlock;
+    int groundYMin = 0;
+    int groundYMax = (gameBoard.mapSize.y - 1) * gameBoard.lengthOfBlock;
+
+    switch (movement) {
+        case UP:
+            character.coordinate.y += 0.1;
+            if (collision(character, gameBoard))
+                character.coordinate.y -= 0.1;
+            if (character.coordinate.y > groundYMax)
+                character.coordinate.y = groundYMax;
+            break;
+        case DOWN:
+            character.coordinate.y -= 0.1;
+            if (collision(character, gameBoard))
+                character.coordinate.y += 0.1;
+            if (character.coordinate.y < groundYMin)
+                character.coordinate.y = groundYMin;
+            break;
+        case LEFT:
+            character.coordinate.x -= 0.1;
+            if (collision(character, gameBoard))
+                character.coordinate.x += 0.1;
+            if (character.coordinate.x < groundXMin)
+                character.coordinate.x = groundXMin;
+            break;
+        case RIGHT:
+            character.coordinate.x += 0.1;
+            if (collision(character, gameBoard))
+                character.coordinate.x -= 0.1;
+            if (character.coordinate.x > groundXMax)
+                character.coordinate.x = groundXMax;
+            break;
+    }
+    return character;
+}
+
+Character newPlayer(GameBoard gameBoard) {
+
+    Character player;
 
     // TODO: 自動自機生成＜壁と被らないように＞
     CharacterCoordinate c = {0, 0, 0};
@@ -47,7 +94,7 @@ Player newPlayer(GameBoard gameBoard) {
     return player;
 }
 
-EnemyList newEnemyList(GameBoard gameBoard, Player player) {
+EnemyList newEnemyList(GameBoard gameBoard, Character player) {
 
     EnemyList enemyList;
 
@@ -59,7 +106,7 @@ EnemyList newEnemyList(GameBoard gameBoard, Player player) {
     };
     for (int i = 0; i <= (sizeof(c) / sizeof(c[0])); i++) {
 
-        enemyList.coordinates[i] = c[i];
+        enemyList.enemies[i].coordinate = c[i];
     }
     enemyList.count = (int)(sizeof(c) / sizeof(c[0]));
 

@@ -3,7 +3,7 @@
 #include "gameBoard.h"
 
 // 地面の描画
-void drawGround(GameBoard gameBoard, int lengthOfElement) {
+void drawGround(GameBoard gameBoard) {
 
     GLdouble normal[3] = { 0.0, 0.0, 1.0 };
 
@@ -23,17 +23,17 @@ void drawGround(GameBoard gameBoard, int lengthOfElement) {
             GLdouble v[4][3];
             if (!((i^j) & 1))
                 continue;
-            v[0][0] = (j + 0 - 0.5)*lengthOfElement;
-            v[0][1] = (i + 0 - 0.5)*lengthOfElement;
+            v[0][0] = (j + 0 - 0.5) * gameBoard.lengthOfBlock;
+            v[0][1] = (i + 0 - 0.5) * gameBoard.lengthOfBlock;
             v[0][2] = 0;
-            v[1][0] = (j + 1 - 0.5)*lengthOfElement;
-            v[1][1] = (i + 0 - 0.5)*lengthOfElement;
+            v[1][0] = (j + 1 - 0.5) * gameBoard.lengthOfBlock;
+            v[1][1] = (i + 0 - 0.5) * gameBoard.lengthOfBlock;
             v[1][2] = 0;
-            v[2][0] = (j + 1 - 0.5)*lengthOfElement;
-            v[2][1] = (i + 1 - 0.5)*lengthOfElement;
+            v[2][0] = (j + 1 - 0.5) * gameBoard.lengthOfBlock;
+            v[2][1] = (i + 1 - 0.5) * gameBoard.lengthOfBlock;
             v[2][2] = 0;
-            v[3][0] = (j + 0 - 0.5)*lengthOfElement;
-            v[3][1] = (i + 1 - 0.5)*lengthOfElement;
+            v[3][0] = (j + 0 - 0.5) * gameBoard.lengthOfBlock;
+            v[3][1] = (i + 1 - 0.5) * gameBoard.lengthOfBlock;
             v[3][2] = 0;
             glVertex3dv(v[0]);
             glVertex3dv(v[1]);
@@ -51,17 +51,17 @@ void drawGround(GameBoard gameBoard, int lengthOfElement) {
         for (int j = 0; j < gameBoard.mapSize.y; j++) {
             GLdouble v[4][3];
             if ((i^j) & 1)continue;
-            v[0][0] = (j + 0 - 0.5)*lengthOfElement;
-            v[0][1] = (i + 0 - 0.5)*lengthOfElement;
+            v[0][0] = (j + 0 - 0.5) * gameBoard.lengthOfBlock;
+            v[0][1] = (i + 0 - 0.5) * gameBoard.lengthOfBlock;
             v[0][2] = 0;
-            v[1][0] = (j + 1 - 0.5)*lengthOfElement;
-            v[1][1] = (i + 0 - 0.5)*lengthOfElement;
+            v[1][0] = (j + 1 - 0.5) * gameBoard.lengthOfBlock;
+            v[1][1] = (i + 0 - 0.5) * gameBoard.lengthOfBlock;
             v[1][2] = 0;
-            v[2][0] = (j + 1 - 0.5)*lengthOfElement;
-            v[2][1] = (i + 1 - 0.5)*lengthOfElement;
+            v[2][0] = (j + 1 - 0.5) * gameBoard.lengthOfBlock;
+            v[2][1] = (i + 1 - 0.5) * gameBoard.lengthOfBlock;
             v[2][2] = 0;
-            v[3][0] = (j + 0 - 0.5)*lengthOfElement;
-            v[3][1] = (i + 1 - 0.5)*lengthOfElement;
+            v[3][0] = (j + 0 - 0.5) * gameBoard.lengthOfBlock;
+            v[3][1] = (i + 1 - 0.5) * gameBoard.lengthOfBlock;
             v[3][2] = 0;
             glVertex3dv(v[0]);
             glVertex3dv(v[1]);
@@ -74,18 +74,18 @@ void drawGround(GameBoard gameBoard, int lengthOfElement) {
 }
 
 // 壁の描画
-void drawWalls(GameBoard gameBoard, int lengthOfElement) {
+void drawWalls(GameBoard gameBoard) {
 
     // TODO: 実装
 }
 
-void drawGameBoard(GameBoard gameBoard, int lengthOfElement) {
+void drawGameBoard(GameBoard gameBoard) {
 
-    drawGround(gameBoard, lengthOfElement);
-    drawWalls(gameBoard, lengthOfElement);
+    drawGround(gameBoard);
+    drawWalls(gameBoard);
 }
 
-GameBoard newGameBoard() {
+GameBoard newGameBoard(int lengthOfBlock) {
 
     GameBoard gameBoard;
 
@@ -100,6 +100,7 @@ GameBoard newGameBoard() {
         }
     gameBoard.countOfCheckedPoints = 0;
     gameBoard.countOfUncheckedPoints = 0;
+    gameBoard.lengthOfBlock = lengthOfBlock;
 
     return gameBoard;
 }

@@ -14,10 +14,11 @@ typedef struct {
     MapElement mapElements[500][500];
     int countOfCheckedPoints;
     int countOfUncheckedPoints;
+    int lengthOfBlock;
 } GameBoard;
 
-void drawGameBoard(GameBoard gameBoard, int lengthOfElement);
+void drawGameBoard(GameBoard gameBoard);
 
-GameBoard newGameBoard();
+GameBoard newGameBoard(int lengthOfBlock);
 
 #endif //GAME_GAMEBOARD_H
