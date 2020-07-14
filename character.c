@@ -101,8 +101,8 @@ EnemyList newEnemyList(GameBoard gameBoard, Character player) {
     // TODO: 自動敵機生成＜自機・壁と被らないように＞
     CharacterCoordinate c[3] = {
             {2.0, 6.0, 0.0},
-            {4.0, 3.0, 0.0},
-            {1.0, 1.0, 0.0}
+            {1.0, 3.0, 0.0},
+            {0.0, 0.0, 0.0}
     };
     for (int i = 0; i <= (sizeof(c) / sizeof(c[0])); i++) {
 
