@@ -88,7 +88,7 @@ Character newPlayer(GameBoard gameBoard) {
     Character player;
 
     // TODO: 自動自機生成＜壁と被らないように＞
-    CharacterCoordinate c = {0, 0, 0};
+    CharacterCoordinate c = {3, 3, 0};
     player.coordinate = c;
 
     return player;
