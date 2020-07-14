@@ -87,6 +87,8 @@ void drawGameBoard(GameBoard gameBoard) {
 
 GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
 
+    mapSize = (MapSize){4, 7};  // TODO: 固定値を撤廃
+
     GameBoard gameBoard;
 
     // TODO: 壁をボードに入れる（必須）
@@ -96,6 +98,14 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
         for (int j = 1; j <= gameBoard.mapSize.y; j++) {
             gameBoard.mapElements[i][j] = ROAD;
         }
+
+    gameBoard.mapElements[0][1] = WALL;
+    gameBoard.mapElements[2][2] = WALL;
+    gameBoard.mapElements[2][3] = WALL;
+    gameBoard.mapElements[1][0] = UNCHECKED_POINT;
+    gameBoard.mapElements[3][0] = UNCHECKED_POINT;
+    gameBoard.mapElements[3][5] = CHECKED_POINT;
+
     gameBoard.countOfCheckedPoints = 0;
     gameBoard.countOfUncheckedPoints = 0;
     gameBoard.lengthOfBlock = lengthOfBlock;
