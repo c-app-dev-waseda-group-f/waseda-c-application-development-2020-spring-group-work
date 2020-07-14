@@ -91,7 +91,6 @@ GameBoard newGameBoard(int lengthOfBlock) {
 
     // TODO: 壁をボードに入れる（必須）
     // TODO: チェックポイントをボードに入れる（必須）
-    // TODO: 自動ボード生成（オプション）
     gameBoard.mapSize.x = 22;
     gameBoard.mapSize.y = 22;
     for (int i = 0; i <= gameBoard.mapSize.x; i++)
