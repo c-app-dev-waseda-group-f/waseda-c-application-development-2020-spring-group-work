@@ -85,14 +85,13 @@ void drawGameBoard(GameBoard gameBoard) {
     drawWalls(gameBoard);
 }
 
-GameBoard newGameBoard(int lengthOfBlock) {
+GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
 
     GameBoard gameBoard;
 
     // TODO: 壁をボードに入れる（必須）
     // TODO: チェックポイントをボードに入れる（必須）
-    gameBoard.mapSize.x = 22;
-    gameBoard.mapSize.y = 22;
+    gameBoard.mapSize = mapSize;
     for (int i = 0; i <= gameBoard.mapSize.x; i++)
         for (int j = 1; j <= gameBoard.mapSize.y; j++) {
             gameBoard.mapElements[i][j] = ROAD;
