@@ -1,6 +1,8 @@
 #ifndef GAME_CHARACTER_H
 #define GAME_CHARACTER_H
 
+#include "gameBoard.h"
+
 typedef enum {
     UP, DOWN , LEFT, RIGHT
 } CharacterMovement;
