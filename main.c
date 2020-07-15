@@ -64,7 +64,7 @@ void timerFunc(int value) {
 
 	// 視点を移動
 	glLoadIdentity();
-	gluLookAt(0.0 + player.coordinate.x, -10.0 + player.coordinate.y, 2.0, 0.0 + player.coordinate.x, 0.0 + player.coordinate.y, 1.5, 0.0, 0.0, 1.0);
+	gluLookAt(0.0 + player.coordinate.x, -22.0 + player.coordinate.y, 15.0, 0.0 + player.coordinate.x, 0.0 + player.coordinate.y, 1.5, 0.0, 0.0, 1.0);
 
 	// 敵機の移動
     for (int i = 0; i < enemyList.count; i++) {
