@@ -23,8 +23,8 @@ void display() {
 	glPushMatrix();
 
 	drawGameBoard(gameBoard);
-	drawPlayer(player, (double)gameBoard.lengthOfBlock / 2);
-	drawEnemies(enemyList, (double)gameBoard.lengthOfBlock / 2);
+	drawPlayer(player, (double)gameBoard.lengthOfBlock / 2, gameBoard);
+	drawEnemies(enemyList, (double)gameBoard.lengthOfBlock / 2, gameBoard);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -64,7 +64,7 @@ void timerFunc(int value) {
 
 	// 視点を移動
 	glLoadIdentity();
-	gluLookAt(0.0 + player.coordinate.x, -22.0 + player.coordinate.y, 15.0, 0.0 + player.coordinate.x, 0.0 + player.coordinate.y, 1.5, 0.0, 0.0, 1.0);
+	gluLookAt(0.0 + player.coordinate.x * gameBoard.lengthOfBlock, -22.0 + player.coordinate.y * gameBoard.lengthOfBlock, 15.0, 0.0 + player.coordinate.x * gameBoard.lengthOfBlock, 0.0 + player.coordinate.y * gameBoard.lengthOfBlock, 1.5, 0.0, 0.0, 1.0);
 
 	// 敵機の移動
     for (int i = 0; i < enemyList.count; i++) {

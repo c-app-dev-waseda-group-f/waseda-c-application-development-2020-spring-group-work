@@ -4,12 +4,12 @@
 #include "gameBoard.h"
 #include "character.h"
 
-void drawPlayer(Character player, double radius) {
+void drawPlayer(Character player, double radius, GameBoard gameBoard) {
 
     glPushMatrix();
 
-    glTranslatef(player.coordinate.x, player.coordinate.y, player.coordinate.z);
-    glTranslatef(0.0, 0.0, 0.5);
+    glTranslatef(player.coordinate.x * gameBoard.lengthOfBlock, player.coordinate.y * gameBoard.lengthOfBlock, player.coordinate.z);
+    glTranslatef(0.0, 0.0, radius);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color[GREEN]);
     glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
     glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
@@ -20,16 +20,16 @@ void drawPlayer(Character player, double radius) {
     glPopMatrix();
 }
 
-void drawEnemies(EnemyList enemyList, double radius) {
+void drawEnemies(EnemyList enemyList, double radius, GameBoard gameBoard) {
 
-    glTranslatef(0.0, 0.0, 0.5);
+    glTranslatef(0.0, 0.0, radius);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color[RED]);
     glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
     glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     for (int i = 0; i < enemyList.count; i++) {
         glPushMatrix();
-        glTranslatef(enemyList.enemies[i].coordinate.x, enemyList.enemies[i].coordinate.y, enemyList.enemies[i].coordinate.z);
+        glTranslatef(enemyList.enemies[i].coordinate.x * gameBoard.lengthOfBlock, enemyList.enemies[i].coordinate.y * gameBoard.lengthOfBlock, enemyList.enemies[i].coordinate.z);
         glutSolidSphere(radius, 100, 100);
         glPopMatrix();
     }
