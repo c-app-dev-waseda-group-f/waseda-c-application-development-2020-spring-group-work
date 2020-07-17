@@ -1,6 +1,64 @@
 #include <GL/glut.h>
+#include <math.h>
 #include "color.h"
 #include "gameBoard.h"
+
+void drawCheckPoints(GameBoard gameBoard) {
+
+    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
+        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+            if (gameBoard.mapElements[i][j] == CHECKED_POINT) {
+
+                double coordinates[5][2];
+
+                for (int k = 0; k < 5; k++) {
+
+                    coordinates[k][0] = cos(M_PI * 2 * k * 2 / 5) * gameBoard.lengthOfBlock / 2;
+                    coordinates[k][1] = sin(M_PI * 2 * k * 2 / 5) * gameBoard.lengthOfBlock / 2;
+                }
+
+                glPushMatrix();
+                glTranslatef(i * gameBoard.lengthOfBlock, j * gameBoard.lengthOfBlock, 0.01);
+                glMaterialfv(GL_FRONT, GL_DIFFUSE, color[MAGENTA]);
+
+                glBegin(GL_TRIANGLE_FAN);
+                for (int k = 0; k < 5; k++) {
+
+                    glVertex3d(0, 0, 0);
+                    glVertex3d(coordinates[k % 5][0], coordinates[k % 5][1], 0);
+                    glVertex3d(coordinates[(k + 1) % 5][0], coordinates[(k + 1) % 5][1], 0);
+                }
+                glEnd();
+
+                glPopMatrix();
+            } else if (gameBoard.mapElements[i][j] == UNCHECKED_POINT) {
+
+                double coordinates[5][2];
+
+                for (int k = 0; k < 5; k++) {
+
+                    coordinates[k][0] = cos(M_PI * 2 * k * 2 / 5) * gameBoard.lengthOfBlock / 2;
+                    coordinates[k][1] = sin(M_PI * 2 * k * 2 / 5) * gameBoard.lengthOfBlock / 2;
+                }
+
+                glPushMatrix();
+                glTranslatef(i * gameBoard.lengthOfBlock, j * gameBoard.lengthOfBlock, 0.01);
+                glMaterialfv(GL_FRONT, GL_DIFFUSE, color[MAGENTA]);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+                glBegin(GL_TRIANGLE_FAN);
+                for (int k = 0; k < 5; k++) {
+
+                    glVertex3d(0, 0, 0);
+                    glVertex3d(coordinates[k % 5][0], coordinates[k % 5][1], 0);
+                    glVertex3d(coordinates[(k + 1) % 5][0], coordinates[(k + 1) % 5][1], 0);
+                }
+                glEnd();
+
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                glPopMatrix();
+            }
+}
 
 // 地面の描画
 void drawGround(GameBoard gameBoard) {
@@ -10,8 +68,6 @@ void drawGround(GameBoard gameBoard) {
     glPushMatrix();
 
     glNormal3dv(normal);
-
-    // TODO: チェックポイントの色変え
 
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color[GRAY]);//灰色
     glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLACK]);
@@ -83,6 +139,7 @@ void drawGameBoard(GameBoard gameBoard) {
 
     drawGround(gameBoard);
     drawWalls(gameBoard);
+    drawCheckPoints(gameBoard);
 }
 
 GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
@@ -106,7 +163,7 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
 
     gameBoard.countOfCheckedPoints = 0;
     gameBoard.countOfUncheckedPoints = 0;
-    gameBoard.lengthOfBlock = lengthOfBlock;
+    gameBoard.lengthOfBlock = 1;
 
     return gameBoard;
 }
