@@ -163,7 +163,7 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
 
     gameBoard.countOfCheckedPoints = 0;
     gameBoard.countOfUncheckedPoints = 0;
-    gameBoard.lengthOfBlock = 1;
+    gameBoard.lengthOfBlock = lengthOfBlock;
 
     return gameBoard;
 }
