@@ -74,7 +74,7 @@ void drawGround(GameBoard gameBoard) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glBegin(GL_QUADS);
-    for (int i = 1; i < gameBoard.mapSize.y; i++)
+    for (int i = 0; i < gameBoard.mapSize.y; i++)
         for (int j = 0; j < gameBoard.mapSize.x; j++) {
             GLdouble v[4][3];
             if (!((i^j) & 1))
