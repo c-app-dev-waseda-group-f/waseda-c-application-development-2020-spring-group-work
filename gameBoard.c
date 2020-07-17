@@ -81,13 +81,13 @@ void drawWalls(GameBoard gameBoard) {
             if (gameBoard.mapElements[i][j] == WALL) {
 
                 glPushMatrix();
-                glTranslatef(i, j, 0.0);
-                glTranslatef(0.0, 0.0, 0.5);
+                glTranslatef(i * gameBoard.lengthOfBlock, j * gameBoard.lengthOfBlock, 0.0);
+                glTranslatef(0.0, 0.0, 0.5 * gameBoard.lengthOfBlock);
                 glMaterialfv(GL_FRONT, GL_DIFFUSE, color[BLUE]);
                 glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLUE]);
                 glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
                 glMaterialf(GL_FRONT, GL_SHININESS, 5.0);
-                glutSolidCube(1);
+                glutSolidCube(gameBoard.lengthOfBlock);
                 glPopMatrix();
             }
 }
