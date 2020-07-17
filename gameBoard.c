@@ -48,7 +48,7 @@ void drawGround(GameBoard gameBoard) {
     glMaterialf(GL_FRONT, GL_SHININESS, 100.0);
     glBegin(GL_QUADS);
     for (int i = 0; i < gameBoard.mapSize.y; i++)
-        for (int j = 0; j < gameBoard.mapSize.y; j++) {
+        for (int j = 0; j < gameBoard.mapSize.x; j++) {
             GLdouble v[4][3];
             if ((i^j) & 1)continue;
             v[0][0] = (j + 0 - 0.5) * gameBoard.lengthOfBlock;
@@ -86,8 +86,6 @@ void drawGameBoard(GameBoard gameBoard) {
 }
 
 GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
-
-    mapSize = (MapSize){4, 7};  // TODO: 固定値を撤廃
 
     GameBoard gameBoard;
 
