@@ -132,7 +132,20 @@ void drawGround(GameBoard gameBoard) {
 // 壁の描画
 void drawWalls(GameBoard gameBoard) {
 
-    // TODO: 実装
+    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
+        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+            if (gameBoard.mapElements[i][j] == WALL) {
+
+                glPushMatrix();
+                glTranslatef(i * gameBoard.lengthOfBlock, j * gameBoard.lengthOfBlock, 0.0);
+                glTranslatef(0.0, 0.0, 0.5 * gameBoard.lengthOfBlock);
+                glMaterialfv(GL_FRONT, GL_DIFFUSE, color[BLUE]);
+                glMaterialfv(GL_FRONT, GL_AMBIENT, color[BLUE]);
+                glMaterialfv(GL_FRONT, GL_SPECULAR, color[WHITE]);
+                glMaterialf(GL_FRONT, GL_SHININESS, 5.0);
+                glutSolidCube(gameBoard.lengthOfBlock);
+                glPopMatrix();
+            }
 }
 
 void drawGameBoard(GameBoard gameBoard) {
@@ -150,7 +163,7 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
     // TODO: チェックポイントをボードに入れる（必須）
     gameBoard.mapSize = mapSize;
     for (int i = 0; i <= gameBoard.mapSize.x; i++)
-        for (int j = 1; j <= gameBoard.mapSize.y; j++) {
+        for (int j = 0; j <= gameBoard.mapSize.y; j++) {
             gameBoard.mapElements[i][j] = ROAD;
         }
 
