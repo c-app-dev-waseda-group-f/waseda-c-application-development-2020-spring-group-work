@@ -21,9 +21,9 @@ typedef struct {
     int count;
 } EnemyList;
 
-void drawPlayer(Character player, double radius);
+void drawPlayer(Character player, double radius, GameBoard gameBoard);
 
-void drawEnemies(EnemyList enemyList, double radius);
+void drawEnemies(EnemyList enemyList, double radius, GameBoard gameBoard);
 
 Character move(Character character, CharacterMovement movement, GameBoard gameBoard);
 
