@@ -15,3 +15,24 @@
 1. そのブランチ内に作業
 1. みんなに確認を依頼
 1. `Master` ブランチに Merge
+
+## タスク開始から完了までの流れ
+1.  GitHubのissuesからタスク一覧を確認します。
+![](./assets/01.PNG)
+1. できそうなタスクをクリックしてissueのページに移動します。内容を確認したら、Assignees
+から担当者を自分に設定します。
+![](./assets/02.PNG)
+1. 自分のPCで作業をしていきます。(画像はコマンドラインを使う場合)
+    1. masterブランチにいることを確認します。
+    1. git pullしてmasterを最新のものに更新します。
+    1. 自分の担当するissueに合わせてブランチを切ります。
+    1. 自分のブランチでコード編集、コンパイル、動作確認をします。
+    1. 問題なく動くことを確認したら、git add(変更したファイルの登録)、git commit(変更内容にコメントを付ける、#issue番号を書くのを忘れずに)します。
+    1. git push(GitHubへのファイルのアップロード)をします。
+![](./assets/03.PNG)
+1. GitHubでPull Request（＝他の人への確認依頼）を送ります。Pull requestsタブからCompare & pull requestを選択します。
+![](./assets/04.PNG)
+1. 右上のReviewersから確認してもらいたい人を選択して、Create pull request。
+![](./assets/05.PNG)
+1. 確認してもらってOKが出ると、Squash and mergeが押せるようになるのでこれを押してmerge(masterブランチに自分の作業を反映すること)して作業完了です。
+![](./assets/06.PNG)
