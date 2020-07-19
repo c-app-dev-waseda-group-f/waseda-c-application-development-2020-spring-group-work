@@ -8,31 +8,22 @@
 1. 万が一問題のあるコードを入れると危険です。
 1. 他に `Master` をベースとしているブランチがあったら予想外の問題が生じる恐れがあります。
 
-基本的に下記の作業の流れが考えられます。
-
-1. `Master` ブランチから新しいブランチを作成
-![](https://user-images.githubusercontent.com/33303880/87225439-fe440400-c3c7-11ea-9986-d5d52ae40c74.png)
-1. そのブランチ内に作業
-1. みんなに確認を依頼
-1. `Master` ブランチに Merge
-
 ## タスク開始から完了までの流れ
-1.  GitHubのissuesからタスク一覧を確認します。
+1. GitHub の Issues からタスク一覧を確認します。
 ![](./assets/01.PNG)
-1. できそうなタスクをクリックしてissueのページに移動します。内容を確認したら、Assignees
-から担当者を自分に設定します。
+1. できそうなタスクをクリックして Issue のページに移動します。内容を確認したら Assignees から担当者を自分に設定します。
 ![](./assets/02.PNG)
-1. 自分のPCで作業をしていきます。(画像はコマンドラインを使う場合)
-    1. masterブランチにいることを確認します。
-    1. git pullしてmasterを最新のものに更新します。
-    1. 自分の担当するissueに合わせてブランチを切ります。
+1. 自分の PC で作業をしていきます。（画像はコマンドラインを使う場合）
+    1. master ブランチにいることを確認します。
+    1. `git pull` して master を最新のものに更新します。
+    1. 自分の担当する Issue に合わせてブランチを切ります。
     1. 自分のブランチでコード編集、コンパイル、動作確認をします。
-    1. 問題なく動くことを確認したら、git add(変更したファイルの登録)、git commit(変更内容にコメントを付ける、#issue番号を書くのを忘れずに)します。
-    1. git push(GitHubへのファイルのアップロード)をします。
+    1. 問題なく動くことを確認したら、`git add` （変更したファイルの登録）、`git commit` （変更内容にコメントを付ける、 #issue 番号を書くのを忘れずに）します。
+    1. `git push`（GitHub へのファイルのアップロード）をします。
 ![](./assets/03.PNG)
-1. GitHubでPull Request（＝他の人への確認依頼）を送ります。Pull requestsタブからCompare & pull requestを選択します。
+1. GitHub で Pull Request（＝他の人への確認依頼）を送ります。Pull requests タブから Compare & pull request を選択します。
 ![](./assets/04.PNG)
-1. 右上のReviewersから確認してもらいたい人を選択して、Create pull request。
+1. 右上の Reviewers から確認してもらいたい人を選択して、 Create pull request。
 ![](./assets/05.PNG)
-1. 確認してもらってOKが出ると、Squash and mergeが押せるようになるのでこれを押してmerge(masterブランチに自分の作業を反映すること)して作業完了です。
+1. 確認してもらって OK が出ると、 Squash and merge が押せるようになるのでこれを押して merge (master ブランチに自分の作業を反映すること)して作業完了です。
 ![](./assets/06.PNG)
