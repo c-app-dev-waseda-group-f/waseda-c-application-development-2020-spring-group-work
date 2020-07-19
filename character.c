@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include <stdbool.h>
+#include <math.h>
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
@@ -38,7 +39,33 @@ void drawEnemies(EnemyList enemyList, double radius, GameBoard gameBoard) {
 // 壁との衝突判定 衝突したらtrue
 bool collidedWithWall(Character character, GameBoard gameBoard) {
 
-    // TODO: 壁との衝突判定
+    int sx = floor(character.coordinate.x);
+    int sy = floor(character.coordinate.y);
+    int ex = ceil(character.coordinate.x);
+    int ey = ceil(character.coordinate.y);
+
+    if (fabs(sx - character.coordinate.x) <= 0.01) {
+
+        ex = sx;
+    } else if (fabs(ex - character.coordinate.x) <= 0.01) {
+
+        sx = ex;
+    }
+
+    if (fabs(sy - character.coordinate.y) <= 0.01) {
+
+        ey = sy;
+    } else if (fabs(ey - character.coordinate.y) <= 0.01) {
+
+        sy = ey;
+    }
+
+    for (int i = sx; i <= ex; i ++)
+        for (int j = sy; j <= ey; j ++)
+            if (gameBoard.mapElements[i][j] == WALL) {
+
+                return true;
+            }
 
     return false;
 }
