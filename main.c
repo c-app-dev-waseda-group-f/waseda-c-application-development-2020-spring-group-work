@@ -32,7 +32,15 @@ void display() {
 
 void checkPointsInGameBoardIfNeeded() {
 
-    // TODO: 自機がチェックポイントにいる場合、そのチェックポイントを Checked にする
+    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
+        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+            if (gameBoard.mapElements[i][j] == UNCHECKED_POINT)
+                if ((fabs(player.coordinate.x - i) < 0.3) && (fabs(player.coordinate.y - j) < 0.3)) {  // ここで感度調整が可能です。
+
+                    gameBoard.mapElements[i][j] = CHECKED_POINT;
+                    gameBoard.countOfUncheckedPoints--;
+                    gameBoard.countOfCheckedPoints++;
+                }
 };
 
 void finishGameIfCollidedWithEnemies() {

@@ -174,8 +174,8 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
     gameBoard.mapElements[3][0] = UNCHECKED_POINT;
     gameBoard.mapElements[3][5] = CHECKED_POINT;
 
-    gameBoard.countOfCheckedPoints = 0;
-    gameBoard.countOfUncheckedPoints = 0;
+    gameBoard.countOfCheckedPoints = 1;
+    gameBoard.countOfUncheckedPoints = 2;
     gameBoard.lengthOfBlock = lengthOfBlock;
 
     return gameBoard;
