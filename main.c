@@ -48,7 +48,7 @@ void finishGameIfCollidedWithEnemies() {
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵との衝突判定
         if (false) {
-            // TODO: 衝突時のゲームオーバーの処理
+            // TODO: 衝突時のゲームオーバーの処理(失敗)
         }
     }
 }
@@ -57,7 +57,7 @@ void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
 
-        // TODO: ゴール処理
+        // TODO: ゴール処理(成功)
     }
 }
 
