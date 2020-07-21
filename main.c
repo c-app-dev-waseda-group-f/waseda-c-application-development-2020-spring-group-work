@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <time.h>
+#include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
@@ -35,7 +36,7 @@ void checkPointsInGameBoardIfNeeded() {
     for (int i = 0; i <= gameBoard.mapSize.x; i ++)
         for (int j = 0; j <= gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == UNCHECKED_POINT)
-                if ((fabs(player.coordinate.x - i) < 0.3) && (fabs(player.coordinate.y - j) < 0.3)) {  // ここで感度調整が可能です。
+                if ((fabs(player.coordinate.x - i) < CHECK_POINT_SENSITIVITY) && (fabs(player.coordinate.y - j) < CHECK_POINT_SENSITIVITY)) {
 
                     gameBoard.mapElements[i][j] = CHECKED_POINT;
                     gameBoard.countOfUncheckedPoints--;
@@ -116,7 +117,7 @@ void idle(void) {
 
 void init(void) {
 
-    gameBoard = newGameBoard(1, (MapSize){18, 12});
+    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y});
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
 
@@ -148,7 +149,7 @@ int main(int argc, char *argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutCreateWindow("Maze Game");
+	glutCreateWindow(WINDOWS_NAME);
 	glutDisplayFunc(display);
 	init();
 	glutMainLoop();

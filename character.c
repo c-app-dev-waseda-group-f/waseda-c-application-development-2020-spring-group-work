@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 #include <math.h>
+#include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
@@ -79,30 +80,30 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
 
     switch (movement) {
         case UP:
-            character.coordinate.y += 0.1;
+            character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
-                character.coordinate.y -= 0.1;
+                character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (character.coordinate.y > groundYMax)
                 character.coordinate.y = groundYMax;
             break;
         case DOWN:
-            character.coordinate.y -= 0.1;
+            character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
-                character.coordinate.y += 0.1;
+                character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (character.coordinate.y < groundYMin)
                 character.coordinate.y = groundYMin;
             break;
         case LEFT:
-            character.coordinate.x -= 0.1;
+            character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
-                character.coordinate.x += 0.1;
+                character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (character.coordinate.x < groundXMin)
                 character.coordinate.x = groundXMin;
             break;
         case RIGHT:
-            character.coordinate.x += 0.1;
+            character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
-                character.coordinate.x -= 0.1;
+                character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (character.coordinate.x > groundXMax)
                 character.coordinate.x = groundXMax;
             break;
