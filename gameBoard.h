@@ -19,6 +19,6 @@ typedef struct {
 
 void drawGameBoard(GameBoard gameBoard);
 
-GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize);
+GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDensity);
 
 #endif //GAME_GAMEBOARD_H

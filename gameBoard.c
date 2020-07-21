@@ -155,7 +155,16 @@ void drawGameBoard(GameBoard gameBoard) {
     drawCheckPoints(gameBoard);
 }
 
-GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
+GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
+
+
+    gameBoard.countOfCheckedPoints = 0;
+    gameBoard.countOfUncheckedPoints = 0;
+
+    return gameBoard;
+}
+
+GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDensity) {
 
     GameBoard gameBoard;
 
@@ -170,12 +179,9 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
     gameBoard.mapElements[0][1] = WALL;
     gameBoard.mapElements[2][2] = WALL;
     gameBoard.mapElements[2][3] = WALL;
-    gameBoard.mapElements[1][0] = UNCHECKED_POINT;
-    gameBoard.mapElements[3][0] = UNCHECKED_POINT;
-    gameBoard.mapElements[3][5] = CHECKED_POINT;
 
-    gameBoard.countOfCheckedPoints = 1;
-    gameBoard.countOfUncheckedPoints = 2;
+    gameBoard = resetCheckPoints(gameBoard, checkPointDensity);
+
     gameBoard.lengthOfBlock = lengthOfBlock;
 
     return gameBoard;

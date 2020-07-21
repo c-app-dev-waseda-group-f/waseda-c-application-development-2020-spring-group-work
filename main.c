@@ -117,7 +117,7 @@ void idle(void) {
 
 void init(void) {
 
-    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y});
+    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
 
