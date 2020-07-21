@@ -115,11 +115,16 @@ Character newPlayer(GameBoard gameBoard) {
 
     Character player;
 
-    // TODO: 自動自機生成＜壁と被らないように＞
-    CharacterCoordinate c = {3, 3, 0};
-    player.coordinate = c;
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++)
+            if (gameBoard.mapElements[i][j] == ROAD) {
 
-    return player;
+                player.coordinate.x = i;
+                player.coordinate.y = j;
+                player.coordinate.z = 0;
+
+                return player;
+            }
 }
 
 EnemyList newEnemyList(GameBoard gameBoard, Character player) {
