@@ -11,7 +11,7 @@ typedef struct {
 
 typedef struct {
     MapSize mapSize;
-    MapElement mapElements[500][500];
+    MapElement mapElements[100][100];
     int countOfCheckedPoints;
     int countOfUncheckedPoints;
     int lengthOfBlock;
