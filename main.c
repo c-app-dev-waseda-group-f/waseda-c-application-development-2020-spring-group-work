@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdbool.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
@@ -45,20 +47,31 @@ void checkPointsInGameBoardIfNeeded() {
 };
 
 void finishGameIfCollidedWithEnemies() {
-
+    char z;
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵との衝突判定
-        if (false) {
-            // TODO: 衝突時のゲームオーバーの処理(失敗)
-        }
+       if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 1) {
+            // TODO: 衝突時のゲームオーバーの処理
+            printf("GAME OVER\n");
+            printf("continue?(y/n) => ");
+            scanf("%c",&z);
+            if(z=='y'){
+
+            }else if(z=='n'){
+
+            }
+            exit(0);
+      }
     }
 }
 
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-
         // TODO: ゴール処理(成功)
+        printf("GAME CLEAR!!\n");
+        // printf("time => %.2f秒\n",difftime(time(NULL)， start_time));
+        exit(0);
     }
 }
 
