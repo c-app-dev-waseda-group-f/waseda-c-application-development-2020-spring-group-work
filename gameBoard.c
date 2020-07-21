@@ -1,5 +1,7 @@
 #include <GL/glut.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 #include "color.h"
 #include "gameBoard.h"
 
@@ -155,11 +157,58 @@ void drawGameBoard(GameBoard gameBoard) {
     drawCheckPoints(gameBoard);
 }
 
+GameBoard removeAllCheckPoints(GameBoard gameBoard) {
+
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++)
+            if ((gameBoard.mapElements[i][j] == CHECKED_POINT) || (gameBoard.mapElements[i][j] == UNCHECKED_POINT))
+                gameBoard.mapElements[i][j] = ROAD;
+
+    gameBoard.countOfUncheckedPoints = 0;
+    gameBoard.countOfCheckedPoints = 0;
+
+    return gameBoard;
+}
+
+int numberOfRoads(GameBoard gameBoard) {
+
+    int sum = 0;
+
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++)
+            if (gameBoard.mapElements[i][j] == ROAD)
+                sum++;
+
+    return sum;
+}
+
 GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
 
+    srand((unsigned int)time(NULL));
 
-    gameBoard.countOfCheckedPoints = 0;
-    gameBoard.countOfUncheckedPoints = 0;
+    gameBoard = removeAllCheckPoints(gameBoard);
+
+    int numberOfCheckPoints = floor(numberOfRoads(gameBoard) * checkPointDensity);
+
+    while (gameBoard.countOfUncheckedPoints < numberOfCheckPoints)
+        for (int i = 0; i < gameBoard.mapSize.x; i++) {
+
+            if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
+                break;
+
+            for (int j = 0; j < gameBoard.mapSize.y; j++) {
+
+                if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
+                    break;
+
+                if (gameBoard.mapElements[i][j] == ROAD)
+                    if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
+
+                        gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                        gameBoard.countOfUncheckedPoints++;
+                    }
+            }
+        }
 
     return gameBoard;
 }
