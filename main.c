@@ -3,12 +3,11 @@
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>
-
 #include <stdio.h>
-
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
+
 ///Githubわかんね
 
 GLfloat pos0[] = { 5.0, 0.0, 0.0, 1.0 };
@@ -50,7 +49,7 @@ void finishGameIfCollidedWithEnemies() {
 
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵との衝突判定
-        if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < gameBoard.lengthOfBlock) {
+        if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
             // TODO: 衝突時のゲームオーバーの処理
             printf("GAME OVER");
             exit(0);
