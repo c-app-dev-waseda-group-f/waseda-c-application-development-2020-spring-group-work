@@ -1,5 +1,7 @@
 #include <GL/glut.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 #include "color.h"
 #include "gameBoard.h"
 
@@ -155,7 +157,63 @@ void drawGameBoard(GameBoard gameBoard) {
     drawCheckPoints(gameBoard);
 }
 
-GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
+GameBoard removeAllCheckPoints(GameBoard gameBoard) {
+
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++)
+            if ((gameBoard.mapElements[i][j] == CHECKED_POINT) || (gameBoard.mapElements[i][j] == UNCHECKED_POINT))
+                gameBoard.mapElements[i][j] = ROAD;
+
+    gameBoard.countOfUncheckedPoints = 0;
+    gameBoard.countOfCheckedPoints = 0;
+
+    return gameBoard;
+}
+
+int numberOfRoads(GameBoard gameBoard) {
+
+    int sum = 0;
+
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++)
+            if (gameBoard.mapElements[i][j] == ROAD)
+                sum++;
+
+    return sum;
+}
+
+GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
+
+    srand((unsigned int)time(NULL));
+
+    gameBoard = removeAllCheckPoints(gameBoard);
+
+    int numberOfCheckPoints = floor(numberOfRoads(gameBoard) * checkPointDensity);
+
+    while (gameBoard.countOfUncheckedPoints < numberOfCheckPoints)
+        for (int i = 0; i < gameBoard.mapSize.x; i++) {
+
+            if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
+                break;
+
+            for (int j = 0; j < gameBoard.mapSize.y; j++) {
+
+                if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
+                    break;
+
+                if (gameBoard.mapElements[i][j] == ROAD)
+                    if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
+
+                        gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                        gameBoard.countOfUncheckedPoints++;
+                    }
+            }
+        }
+
+    return gameBoard;
+}
+
+GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDensity) {
 
     GameBoard gameBoard;
 
@@ -170,12 +228,9 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize) {
     gameBoard.mapElements[0][1] = WALL;
     gameBoard.mapElements[2][2] = WALL;
     gameBoard.mapElements[2][3] = WALL;
-    gameBoard.mapElements[1][0] = UNCHECKED_POINT;
-    gameBoard.mapElements[3][0] = UNCHECKED_POINT;
-    gameBoard.mapElements[3][5] = CHECKED_POINT;
 
-    gameBoard.countOfCheckedPoints = 1;
-    gameBoard.countOfUncheckedPoints = 2;
+    gameBoard = resetCheckPoints(gameBoard, checkPointDensity);
+
     gameBoard.lengthOfBlock = lengthOfBlock;
 
     return gameBoard;
