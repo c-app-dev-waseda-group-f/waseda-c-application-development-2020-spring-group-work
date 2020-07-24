@@ -22,6 +22,7 @@ Character player;
 EnemyList enemyList;
 
 time_t startTime;
+double timeLimit = 10;
 char readableElapsedTimeInfo[30] = "";
 
 //githubテストpull
@@ -78,10 +79,19 @@ void finishGameIfAllPointsChecked() {
     }
 }
 
+void finishGameIfTimeLimitAchieved() {
+
+    if (_difftime64(clock(), startTime) / 1000 > timeLimit) {
+
+        // TODO: 時間超過時のゲームオーバーの処理(失敗)
+    }
+}
+
 void finishGameIfNeeded() {
 
     finishGameIfAllPointsChecked();
     finishGameIfCollidedWithEnemies();
+    finishGameIfTimeLimitAchieved();
 }
 
 // 自機の移動
