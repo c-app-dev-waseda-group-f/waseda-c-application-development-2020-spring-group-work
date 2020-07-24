@@ -6,8 +6,12 @@
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
+#include "text.h"
 
 ///Githubわかんね
+
+const int windowWidth = 300;
+const int windowHeight = 300;
 
 GLfloat pos0[] = { 5.0, 0.0, 0.0, 1.0 };
 GLfloat pos1[] = { 0.0, 0.0, 5.0, 1.0 };
@@ -30,6 +34,11 @@ void display() {
 	drawGameBoard(gameBoard);
 	drawPlayer(player, (double)gameBoard.lengthOfBlock / 2, gameBoard);
 	drawEnemies(enemyList, (double)gameBoard.lengthOfBlock / 2, gameBoard);
+
+	double x = 20;
+	double y = 20;
+	drawText("Copyright 2020 Group F All Rights Reserved.", x, y, windowHeight, windowWidth);
+	drawText("Game started!", x, 2 * y, windowHeight, windowWidth);
 
 	glPopMatrix();
 	glutSwapBuffers();
