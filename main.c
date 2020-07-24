@@ -37,6 +37,12 @@ void display() {
 	glutSwapBuffers();
 }
 
+void continueGame() {
+
+    //TODO:  ゲーム終了後コンティニュー時の処理
+    exit(0);
+}
+
 void checkPointsInGameBoardIfNeeded() {
 
     for (int i = 0; i <= gameBoard.mapSize.x; i ++)
@@ -52,11 +58,37 @@ void checkPointsInGameBoardIfNeeded() {
 
 void finishGameIfCollidedWithEnemies() {
 
+    char z;
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵との衝突判定
         if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
             // TODO: 衝突時のゲームオーバーの処理
-            printf("GAME OVER");
+            printf("GAME OVER\n");
+	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
+	        printf("continue?(y/n) => ");
+            scanf("%c",&z);
+            if (z=='y') {
+                continueGame;
+            } else {
+                exit(0);
+            }
+        }
+    }
+}
+
+void finishGameIfTimelimitReached(){
+
+    char z;
+    double timeLimit=1.0; //あとで消す
+    if (timeLimit==0.0){
+        // 時間超過によるゲームオーバーの処理
+        printf("GAME OVER\n");
+	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
+	    printf("continue?(y/n) => ");
+        scanf("%c",&z);
+        if (z=='y') {
+	        continueGame;
+        } else {
             exit(0);
         }
     }
@@ -65,8 +97,10 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-
         // TODO: ゴール処理(成功)
+        printf("GAME CLEAR!!\n");
+        printf("time =>     \n "); // TODO: 所要時間を出力
+        exit(0);
     }
 }
 
@@ -74,6 +108,7 @@ void finishGameIfNeeded() {
 
     finishGameIfAllPointsChecked();
     finishGameIfCollidedWithEnemies();
+    finishGameIfTimelimitReached();
 }
 
 // 自機の移動
