@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <time.h>
+#include <stdio.h>
 #include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
@@ -20,7 +21,9 @@ GameBoard gameBoard;
 Character player;
 EnemyList enemyList;
 
-time_t t; // 経過時間 TODO: 時間計測の実装
+time_t startTime;
+char readableElapsedTimeInfo[30] = "";
+
 //githubテストpull
 //初めてのpull。
 //＃めでたい
@@ -38,7 +41,7 @@ void display() {
 	double x = 20;
 	double y = 20;
 	drawText("Copyright 2020 Group F All Rights Reserved.", x, y, windowHeight, windowWidth);
-	drawText("Game started!", x, 2 * y, windowHeight, windowWidth);
+	drawText(readableElapsedTimeInfo, x, 2 * y, windowHeight, windowWidth);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -99,6 +102,9 @@ void timerFunc(int value) {
     // ゲーム終了検査
     finishGameIfNeeded();
 
+    // 時間計測のリフレッシュ
+    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time used: %.3fs", _difftime64(clock(), startTime) / 1000);
+
     glutTimerFunc(1, timerFunc, 0);
 }
 
@@ -133,6 +139,7 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
+    startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
