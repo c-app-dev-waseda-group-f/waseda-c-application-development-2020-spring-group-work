@@ -22,7 +22,7 @@ Character player;
 EnemyList enemyList;
 
 time_t startTime;
-double timeLimit = 10;
+double timeLimit;
 char readableElapsedTimeInfo[30] = "";
 
 //githubテストpull
@@ -113,7 +113,10 @@ void timerFunc(int value) {
     finishGameIfNeeded();
 
     // 時間計測のリフレッシュ
-    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time used: %.3fs", _difftime64(clock(), startTime) / 1000);
+    double timeLeft = timeLimit - _difftime64(clock(), startTime) / 1000;
+    if (timeLeft < 0)
+        timeLeft = 0;
+    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
 
     glutTimerFunc(1, timerFunc, 0);
 }
@@ -149,6 +152,7 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
+    timeLimit = 10;
     startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
