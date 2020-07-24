@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
@@ -18,6 +19,10 @@ Character player;
 EnemyList enemyList;
 
 time_t t; // 経過時間 TODO: 時間計測の実装
+//githubテストpull
+//初めてのpull。
+//＃めでたい
+//＃初プルおめ
 
 void display() {
 
@@ -37,7 +42,7 @@ void checkPointsInGameBoardIfNeeded() {
     for (int i = 0; i <= gameBoard.mapSize.x; i ++)
         for (int j = 0; j <= gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == UNCHECKED_POINT)
-                if ((fabs(player.coordinate.x - i) < 0.3) && (fabs(player.coordinate.y - j) < 0.3)) {  // ここで感度調整が可能です。
+                if ((fabs(player.coordinate.x - i) < CHECK_POINT_SENSITIVITY) && (fabs(player.coordinate.y - j) < CHECK_POINT_SENSITIVITY)) {
 
                     gameBoard.mapElements[i][j] = CHECKED_POINT;
                     gameBoard.countOfUncheckedPoints--;
@@ -61,7 +66,7 @@ void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
 
-        // TODO: ゴール処理
+        // TODO: ゴール処理(成功)
     }
 }
 
@@ -120,7 +125,7 @@ void idle(void) {
 
 void init(void) {
 
-    gameBoard = newGameBoard(1, (MapSize){18, 12});
+    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
 
@@ -152,7 +157,7 @@ int main(int argc, char *argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutCreateWindow("Maze Game");
+	glutCreateWindow(WINDOWS_NAME);
 	glutDisplayFunc(display);
 	init();
 	glutMainLoop();
