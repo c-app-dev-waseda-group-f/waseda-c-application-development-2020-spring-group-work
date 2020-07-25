@@ -84,7 +84,7 @@ void finishGameIfAllPointsChecked() {
 
 void finishGameIfTimeLimitAchieved() {
 
-    if (_difftime64(clock(), startTime) / 1000 > timeLimit) {
+    if (difftime(clock(), startTime) / 1000 > timeLimit) {
 
         // TODO: 時間超過時のゲームオーバーの処理(失敗)
     }
@@ -116,7 +116,7 @@ void timerFunc(int value) {
     finishGameIfNeeded();
 
     // 時間計測のリフレッシュ
-    double timeLeft = timeLimit - _difftime64(clock(), startTime) / 1000;
+    double timeLeft = timeLimit - difftime(clock(), startTime) / 1000;
     if (timeLeft < 0)
         timeLeft = 0;
     snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
