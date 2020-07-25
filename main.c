@@ -66,7 +66,7 @@ void finishGameIfCollidedWithEnemies() {
             printf("GAME OVER\n");
 	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
 	        printf("continue?(y/n) => ");
-            scanf("%c",&z);
+            scanf(" %c",&z);
             if (z=='y') {
                 continueGame();
             } else {
