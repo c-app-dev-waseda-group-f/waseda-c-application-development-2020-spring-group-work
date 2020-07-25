@@ -18,6 +18,8 @@ GameBoard gameBoard;
 Character player;
 EnemyList enemyList;
 
+void init(void); 
+
 time_t t; // 経過時間 TODO: 時間計測の実装
 //githubテストpull
 //初めてのpull。
