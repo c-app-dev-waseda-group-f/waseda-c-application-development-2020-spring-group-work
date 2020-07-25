@@ -87,7 +87,7 @@ void finishGameIfTimelimitReached(){
 	    printf("continue?(y/n) => ");
         scanf("%c",&z);
         if (z=='y') {
-	        continueGame;
+	        continueGame();
         } else {
             exit(0);
         }
