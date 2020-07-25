@@ -42,7 +42,7 @@ void display() {
 void continueGame() {
 
     //TODO:  ゲーム終了後コンティニュー時の処理
-    exit(0);
+    init();
 }
 
 void checkPointsInGameBoardIfNeeded() {
