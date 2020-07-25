@@ -8,8 +8,12 @@
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
+#include "text.h"
 
 ///Githubわかんね
+
+const int windowWidth = 300;
+const int windowHeight = 300;
 
 GLfloat pos0[] = { 5.0, 0.0, 0.0, 1.0 };
 GLfloat pos1[] = { 0.0, 0.0, 5.0, 1.0 };
@@ -18,9 +22,12 @@ GameBoard gameBoard;
 Character player;
 EnemyList enemyList;
 
-void init(void); 
+time_t startTime;
+double timeLimit;
+char readableElapsedTimeInfo[30] = "";
 
-time_t t; // 経過時間 TODO: 時間計測の実装
+void init(void);
+
 //githubテストpull
 //初めてのpull。
 //＃めでたい
@@ -34,6 +41,11 @@ void display() {
 	drawGameBoard(gameBoard);
 	drawPlayer(player, (double)gameBoard.lengthOfBlock / 2, gameBoard);
 	drawEnemies(enemyList, (double)gameBoard.lengthOfBlock / 2, gameBoard);
+
+	double x = 20;
+	double y = 20;
+	drawText("Copyright 2020 Group F All Rights Reserved.", x, y, windowHeight, windowWidth);
+	drawText(readableElapsedTimeInfo, x, 2 * y, windowHeight, windowWidth);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -81,8 +93,7 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfTimelimitReached(){
 
     char z;
-    double timeLimit=1.0; //あとで消す
-    if (timeLimit==0.0){
+    if (difftime(clock(), startTime) / 1000 > timeLimit) {
         // 時間超過によるゲームオーバーの処理
         printf("GAME OVER\n");
 	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
@@ -128,6 +139,12 @@ void timerFunc(int value) {
     // チェックポイント検査
     checkPointsInGameBoardIfNeeded();
 
+    // 時間計測のリフレッシュ
+    double timeLeft = timeLimit - difftime(clock(), startTime) / 1000;
+    if (timeLeft < 0)
+        timeLeft = 0;
+    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
+
     // ゲーム終了検査
     finishGameIfNeeded();
 
@@ -165,6 +182,8 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
+    timeLimit = 10;
+    startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
