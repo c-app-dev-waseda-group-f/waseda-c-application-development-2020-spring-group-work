@@ -2,12 +2,18 @@
 #include <math.h>
 #include <stdbool.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
 #include "character.h"
+#include "text.h"
 
 ///Githubわかんね
+
+const int windowWidth = 300;
+const int windowHeight = 300;
 
 GLfloat pos0[] = { 5.0, 0.0, 0.0, 1.0 };
 GLfloat pos1[] = { 0.0, 0.0, 5.0, 1.0 };
@@ -16,7 +22,16 @@ GameBoard gameBoard;
 Character player;
 EnemyList enemyList;
 
-time_t t; // 経過時間 TODO: 時間計測の実装
+time_t startTime;
+double timeLimit;
+char readableElapsedTimeInfo[30] = "";
+
+void init(void);
+
+//githubテストpull
+//初めてのpull。
+//＃めでたい
+//＃初プルおめ
 
 void display() {
 
@@ -27,8 +42,19 @@ void display() {
 	drawPlayer(player, (double)gameBoard.lengthOfBlock / 2, gameBoard);
 	drawEnemies(enemyList, (double)gameBoard.lengthOfBlock / 2, gameBoard);
 
+	double x = 20;
+	double y = 20;
+	drawText("Copyright 2020 Group F All Rights Reserved.", x, y, windowHeight, windowWidth);
+	drawText(readableElapsedTimeInfo, x, 2 * y, windowHeight, windowWidth);
+
 	glPopMatrix();
 	glutSwapBuffers();
+}
+
+void continueGame() {
+
+    //TODO:  ゲーム終了後コンティニュー時の処理
+    init();
 }
 
 void checkPointsInGameBoardIfNeeded() {
@@ -46,10 +72,37 @@ void checkPointsInGameBoardIfNeeded() {
 
 void finishGameIfCollidedWithEnemies() {
 
+    char z;
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵との衝突判定
-        if (false) {
-            // TODO: 衝突時のゲームオーバーの処理(失敗)
+        if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
+            // TODO: 衝突時のゲームオーバーの処理
+            printf("GAME OVER\n");
+	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
+	        printf("continue?(y/n) => ");
+            scanf(" %c",&z);
+            if (z=='y') {
+                continueGame();
+            } else {
+                exit(0);
+            }
+        }
+    }
+}
+
+void finishGameIfTimelimitReached(){
+
+    char z;
+    if (difftime(clock(), startTime) / 1000 > timeLimit) {
+        // 時間超過によるゲームオーバーの処理
+        printf("GAME OVER\n");
+	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
+	    printf("continue?(y/n) => ");
+        scanf(" %c",&z);
+        if (z=='y') {
+	        continueGame();
+        } else {
+            exit(0);
         }
     }
 }
@@ -57,8 +110,10 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-
         // TODO: ゴール処理(成功)
+        printf("GAME CLEAR!!\n");
+        printf("time =>     \n "); // TODO: 所要時間を出力
+        exit(0);
     }
 }
 
@@ -66,6 +121,7 @@ void finishGameIfNeeded() {
 
     finishGameIfAllPointsChecked();
     finishGameIfCollidedWithEnemies();
+    finishGameIfTimelimitReached();
 }
 
 // 自機の移動
@@ -94,6 +150,12 @@ void timerFunc(int value) {
 
     // チェックポイント検査
     checkPointsInGameBoardIfNeeded();
+
+    // 時間計測のリフレッシュ
+    double timeLeft = timeLimit - difftime(clock(), startTime) / 1000;
+    if (timeLeft < 0)
+        timeLeft = 0;
+    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
 
     // ゲーム終了検査
     finishGameIfNeeded();
@@ -132,6 +194,8 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
+    timeLimit = 10;
+    startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
