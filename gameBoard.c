@@ -7,8 +7,8 @@
 
 void drawCheckPoints(GameBoard gameBoard) {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == CHECKED_POINT) {
 
                 double coordinates[5][2];
@@ -219,7 +219,6 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDens
     GameBoard gameBoard;
 
     // TODO: 壁をボードに入れる（必須）
-    // TODO: チェックポイントをボードに入れる（必須）
     gameBoard.mapSize = mapSize;
     for (int i = 0; i <= gameBoard.mapSize.x; i++)
         for (int j = 0; j <= gameBoard.mapSize.y; j++) {
