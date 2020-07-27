@@ -202,11 +202,12 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
                     break;
 
                 if (gameBoard.mapElements[i][j] == ROAD)
-                    if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
+                    if ((i ^ j) & 1) 
+                        if (rand() % 10001 < (int)(checkPointDensity * 10000)) {
 
-                        gameBoard.mapElements[i][j] = UNCHECKED_POINT;
-                        gameBoard.countOfUncheckedPoints++;
-                    }
+                            gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                            gameBoard.countOfUncheckedPoints++;
+                        }
             }
         }
 
