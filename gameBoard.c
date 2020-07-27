@@ -239,11 +239,8 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDens
             if (i % 2 == 0 || j % 2 == 0)
                 continue;
             while (1) {
-                if (i == 1) {
-                    wallDirection = rand() % 4;
-                } else {
-                    wallDirection = rand() % 3;
-                }
+                
+                wallDirection = rand() % 3;
 
                 switch (wallDirection) {
                     case 0: // 下
@@ -258,14 +255,14 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDens
                         k = i;
                         l = j + 1;
                         break;
-                    case 3: // 左
-                        k = i - 1;
-                        l = j;
-                        break;
                 }
 
                 if (k < 0 || l < 0 || k >= gameBoard.mapSize.x || l >= gameBoard.mapSize.y || gameBoard.mapElements[k][l] == WALL)
                     continue;
+
+                // 棒倒し法から外周の壁を取り払う 
+                if ((i == gameBoard.mapSize.x - 2 && wallDirection == 1)||(j == 1 && wallDirection == 0)||(j == gameBoard.mapSize.y - 2 && wallDirection == 2)) 
+                    break;
 
                 gameBoard.mapElements[k][l] = WALL;
                 break;
