@@ -177,6 +177,7 @@ int numberOfRoads(GameBoard gameBoard) {
     for (int i = 0; i < gameBoard.mapSize.x; i++)
         for (int j = 0; j < gameBoard.mapSize.y; j++)
             if (gameBoard.mapElements[i][j] == ROAD)
+              if(gameBoard.mapElements[i][j-1] != WALL)
                 sum++;
 
     return sum;
@@ -201,12 +202,20 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
                 if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
                     break;
 
-                if (gameBoard.mapElements[i][j] == ROAD)
+                if (gameBoard.mapElements[i][j] == ROAD){
+
+                  if(gameBoard.mapElements[i][j-1]==WALL){
+                      continue;
+                  }else{
                     if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
 
-                        gameBoard.mapElements[i][j] = UNCHECKED_POINT;
-                        gameBoard.countOfUncheckedPoints++;
+                      gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                      gameBoard.countOfUncheckedPoints++;
                     }
+                  }
+
+                }
+
             }
         }
 
