@@ -59,8 +59,8 @@ void continueGame() {
 
 void checkPointsInGameBoardIfNeeded() {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == UNCHECKED_POINT)
                 if ((fabs(player.coordinate.x - i) < CHECK_POINT_SENSITIVITY) && (fabs(player.coordinate.y - j) < CHECK_POINT_SENSITIVITY)) {
 
