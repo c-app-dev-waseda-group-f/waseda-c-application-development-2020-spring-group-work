@@ -93,7 +93,7 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfTimelimitReached(){
 
     char z;
-    if (difftime(clock(), startTime) / 1000 > timeLimit) {
+    if (difftime(clock(), startTime) / CLOCKS_PER_SEC  > timeLimit) {
         // 時間超過によるゲームオーバーの処理
         printf("GAME OVER\n");
 	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
@@ -140,7 +140,7 @@ void timerFunc(int value) {
     checkPointsInGameBoardIfNeeded();
 
     // 時間計測のリフレッシュ
-    double timeLeft = timeLimit - difftime(clock(), startTime) / 1000;
+    double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC ;
     if (timeLeft < 0)
         timeLeft = 0;
     snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);

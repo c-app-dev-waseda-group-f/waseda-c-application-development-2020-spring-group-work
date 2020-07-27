@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 #include <math.h>
+#include <stdlib.h>
 #include "configs.h"
 #include "color.h"
 #include "gameBoard.h"
@@ -133,10 +134,29 @@ EnemyList newEnemyList(GameBoard gameBoard, Character player) {
 
     // TODO: 自動敵機生成＜自機・壁と被らないように＞
     CharacterCoordinate c[3] = {
-            {2.0, 6.0, 0.0},
-            {1.0, 3.0, 0.0},
-            {5.0, 0.0, 0.0}
+        {0.0, 0.0, 0.0},
+        {0.0, 0.0, 0.0},
+        {0.0, 0.0, 0.0}
     };
+    double x0 = 0.0;
+    double y0 = 0.0;
+    for(int i = 0; i < 3; i++){
+        //gameboardの右下、右上、左上の順で一機ずつ設定
+        int count = 1;
+        if(i == 0) x0 += gameBoard.mapSize.x / 2;
+        if(i == 1) y0 += gameBoard.mapSize.y / 2;
+        if(i == 2) x0 -= gameBoard.mapSize.x / 2;
+        while(count){
+            double x = (double)(rand() % (gameBoard.mapSize.x / 2));
+            double y = (double)(rand() % (gameBoard.mapSize.y / 2));
+            if(gameBoard.mapElements[(int)(x + x0)][(int)(y + y0)] != WALL){
+                c[i].x = x + x0;
+                c[i].y = y + y0;
+                count--;
+            }
+        }
+    }
+
     for (int i = 0; i <= (sizeof(c) / sizeof(c[0])); i++) {
 
         enemyList.enemies[i].coordinate = c[i];
