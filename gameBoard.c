@@ -176,10 +176,10 @@ int numberOfWhiteRoads(GameBoard gameBoard) {
 
     for (int i = 0; i < gameBoard.mapSize.x; i++)
         for (int j = 0; j < gameBoard.mapSize.y; j++)
-            if (gameBoard.mapElements[i][j] == ROAD)
+            if (((i ^ j) & 1) && (gameBoard.mapElements[i][j] == ROAD))
                 sum++;
 
-    return ceiling(sum / 2);
+    return sum;
 }
 
 GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
