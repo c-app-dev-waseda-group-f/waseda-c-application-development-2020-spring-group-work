@@ -130,7 +130,7 @@ void timerFunc(int value) {
 	// 敵機の移動
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵機の移動
-        double Speed = (double)(gameBoard.lengthOfBlock) * 20000 / CLOCKS_PER_SEC;
+        double Speed = (double)(gameBoard.lengthOfBlock) * 10 / CLOCKS_PER_SEC;
         srand((unsigned int)time(NULL) + i);
         if(rand() % 4 == 0){
             if(gameBoard.mapElements[(int)(enemyList.enemies[i].coordinate.x) + 1][(int)enemyList.enemies[i].coordinate.y] != WALL && enemyList.enemies[i].coordinate.x + 1 < gameBoard.mapSize.x - 1) enemyList.enemies[i].coordinate.x += Speed;
