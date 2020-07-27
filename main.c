@@ -53,7 +53,6 @@ void display() {
 
 void continueGame() {
 
-    //TODO:  ゲーム終了後コンティニュー時の処理
     init();
 }
 
@@ -74,9 +73,7 @@ void finishGameIfCollidedWithEnemies() {
 
     char z;
     for (int i = 0; i < enemyList.count; i++) {
-        // TODO: 敵との衝突判定
         if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
-            // TODO: 衝突時のゲームオーバーの処理
             printf("GAME OVER\n");
 	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
 	        printf("continue?(y/n) => ");
@@ -110,9 +107,8 @@ void finishGameIfTimelimitReached(){
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-        // TODO: ゴール処理(成功)
         printf("GAME CLEAR!!\n");
-        printf("time =>     \n "); // TODO: 所要時間を出力
+        printf("time =>     \n ");
         exit(0);
     }
 }
@@ -182,7 +178,7 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
-    timeLimit = 10;
+    timeLimit = gameBoard.mapSize.x * gameBoard.mapSize.y / CHARACTER_UNIT_MOVING_LENGTH * sqrt(CHECK_POINT_DENSITY) * 0.1;
     startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
