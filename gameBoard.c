@@ -177,6 +177,7 @@ int numberOfRoads(GameBoard gameBoard) {
     for (int i = 0; i < gameBoard.mapSize.x; i++)
         for (int j = 0; j < gameBoard.mapSize.y; j++)
             if (gameBoard.mapElements[i][j] == ROAD)
+              if(gameBoard.mapElements[i][j-1] != WALL)
                 sum++;
 
     return sum;
