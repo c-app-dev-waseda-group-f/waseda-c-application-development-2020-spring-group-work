@@ -35,7 +35,7 @@
 
     <item>1Y19F112 \<#6771\>\<#5C71\>\<#9F8D\>\<#4E4B\>\<#4ECB\>
 
-    \;
+    \<#4E00\>\<#90E8\>\<#6A5F\>\<#80FD\>\<#306E\>\<#5B9F\>\<#88C5\>
 
     <item>1W172343 \<#694A\>\<#654F\>\<#821C\>
 
@@ -82,7 +82,6 @@
     <associate|auto-2|<tuple|2|1>>
     <associate|auto-3|<tuple|3|1>>
     <associate|auto-4|<tuple|4|1>>
-    <associate|auto-5|<tuple|5|?>>
   </collection>
 </references>
 
