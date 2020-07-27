@@ -4,6 +4,7 @@
 #include <time.h>
 #include "color.h"
 #include "gameBoard.h"
+#include "stdio.h"
 
 void drawCheckPoints(GameBoard gameBoard) {
 
@@ -134,8 +135,8 @@ void drawGround(GameBoard gameBoard) {
 // 壁の描画
 void drawWalls(GameBoard gameBoard) {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == WALL) {
 
                 glPushMatrix();
@@ -177,6 +178,7 @@ int numberOfWhiteRoads(GameBoard gameBoard) {
     for (int i = 0; i < gameBoard.mapSize.x; i++)
         for (int j = 0; j < gameBoard.mapSize.y; j++)
             if (((i ^ j) & 1) && (gameBoard.mapElements[i][j] == ROAD))
+              if(gameBoard.mapElements[i][j-1] != WALL)
                 sum++;
 
     return sum;
@@ -201,13 +203,20 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
                 if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
                     break;
 
-                if (gameBoard.mapElements[i][j] == ROAD)
-                    if ((i ^ j) & 1) 
-                        if (rand() % 10001 < (int)(checkPointDensity * 10000)) {
+                if (gameBoard.mapElements[i][j] == ROAD) {
+                    if ((i ^ j) & 1) {
+                        if (gameBoard.mapElements[i][j - 1] == WALL) {
 
-                            gameBoard.mapElements[i][j] = UNCHECKED_POINT;
-                            gameBoard.countOfUncheckedPoints++;
+                            continue;
+                        } else {
+                            if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
+
+                                gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                                gameBoard.countOfUncheckedPoints++;
+                            }
                         }
+                    }
+                }
             }
         }
 
@@ -218,16 +227,55 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDens
 
     GameBoard gameBoard;
 
+    srand((unsigned int)time(NULL));
     // TODO: 壁をボードに入れる（必須）
     gameBoard.mapSize = mapSize;
-    for (int i = 0; i <= gameBoard.mapSize.x; i++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j++) {
-            gameBoard.mapElements[i][j] = ROAD;
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++) {
+            if (i % 2 == 1 && j % 2 == 1) { // 棒倒し法の準備。1マス間隔で壁を設置。
+                gameBoard.mapElements[i][j] = WALL;
+            } else {
+                gameBoard.mapElements[i][j] = ROAD;
+            }
         }
 
-    gameBoard.mapElements[0][1] = WALL;
-    gameBoard.mapElements[2][2] = WALL;
-    gameBoard.mapElements[2][3] = WALL;
+    int wallDirection, k, l; // wallDirection: 壁を生成する方向。下を0として反時計回りに1ずつ増加。
+    // 棒倒し法により左から右に迷路を生成する
+    for (int i = 0; i < gameBoard.mapSize.x; i++)
+        for (int j = 0; j < gameBoard.mapSize.y; j++) {
+
+            if (i % 2 == 0 || j % 2 == 0)
+                continue;
+            while (1) {
+                
+                wallDirection = rand() % 3;
+
+                switch (wallDirection) {
+                    case 0: // 下
+                        k = i;
+                        l = j - 1;
+                        break;
+                    case 1: // 右
+                        k = i + 1;
+                        l = j;
+                        break;
+                    case 2: // 上
+                        k = i;
+                        l = j + 1;
+                        break;
+                }
+
+                if (k < 0 || l < 0 || k >= gameBoard.mapSize.x || l >= gameBoard.mapSize.y || gameBoard.mapElements[k][l] == WALL)
+                    continue;
+
+                // 棒倒し法から外周の壁を取り払う 
+                if ((i == gameBoard.mapSize.x - 2 && wallDirection == 1)||(j == 1 && wallDirection == 0)||(j == gameBoard.mapSize.y - 2 && wallDirection == 2)) 
+                    break;
+
+                gameBoard.mapElements[k][l] = WALL;
+                break;
+            }
+        }
 
     gameBoard = resetCheckPoints(gameBoard, checkPointDensity);
 

@@ -90,7 +90,7 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfTimelimitReached(){
 
     char z;
-    if (difftime(clock(), startTime) / CLOCKS_PER_SEC  > timeLimit) {
+    if (difftime(clock(), startTime) / CLOCKS_PER_SEC > timeLimit) {
         // 時間超過によるゲームオーバーの処理
         printf("GAME OVER\n");
 	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
@@ -130,13 +130,25 @@ void timerFunc(int value) {
 	// 敵機の移動
     for (int i = 0; i < enemyList.count; i++) {
         // TODO: 敵機の移動
+        double Speed = (double)(gameBoard.lengthOfBlock) * 10 / CLOCKS_PER_SEC;
+        srand((unsigned int)time(NULL) + i);
+        if(rand() % 4 == 0){
+            if(gameBoard.mapElements[(int)(enemyList.enemies[i].coordinate.x) + 1][(int)enemyList.enemies[i].coordinate.y] != WALL && enemyList.enemies[i].coordinate.x + 1 < gameBoard.mapSize.x - 1) enemyList.enemies[i].coordinate.x += Speed;
+        }else if(rand() % 4 == 1){
+            if(gameBoard.mapElements[(int)(enemyList.enemies[i].coordinate.x) - 1][(int)enemyList.enemies[i].coordinate.y] != WALL && enemyList.enemies[i].coordinate.x - 1 > 0) enemyList.enemies[i].coordinate.x -= Speed;
+        }else if(rand() % 4 == 2){
+            if(gameBoard.mapElements[(int)enemyList.enemies[i].coordinate.x][(int)(enemyList.enemies[i].coordinate.y) + 1] != WALL && enemyList.enemies[i].coordinate.y + 1 < gameBoard.mapSize.y - 1) enemyList.enemies[i].coordinate.y += Speed;
+        }else if(rand() % 4 == 3){
+            if(gameBoard.mapElements[(int)enemyList.enemies[i].coordinate.x][(int)(enemyList.enemies[i].coordinate.y) - 1] != WALL && enemyList.enemies[i].coordinate.y - 1 > 0) enemyList.enemies[i].coordinate.y -= Speed;
+        }
+
     }
 
     // チェックポイント検査
     checkPointsInGameBoardIfNeeded();
 
     // 時間計測のリフレッシュ
-    double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC ;
+    double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC;
     if (timeLeft < 0)
         timeLeft = 0;
     snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
