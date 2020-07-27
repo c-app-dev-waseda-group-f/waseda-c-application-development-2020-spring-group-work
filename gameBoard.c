@@ -7,8 +7,8 @@
 
 void drawCheckPoints(GameBoard gameBoard) {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == CHECKED_POINT) {
 
                 double coordinates[5][2];
@@ -177,6 +177,7 @@ int numberOfRoads(GameBoard gameBoard) {
     for (int i = 0; i < gameBoard.mapSize.x; i++)
         for (int j = 0; j < gameBoard.mapSize.y; j++)
             if (gameBoard.mapElements[i][j] == ROAD)
+              if(gameBoard.mapElements[i][j-1] != WALL)
                 sum++;
 
     return sum;
@@ -201,12 +202,20 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
                 if (gameBoard.countOfUncheckedPoints >= numberOfCheckPoints)
                     break;
 
-                if (gameBoard.mapElements[i][j] == ROAD)
+                if (gameBoard.mapElements[i][j] == ROAD){
+
+                  if(gameBoard.mapElements[i][j-1]==WALL){
+                      continue;
+                  }else{
                     if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
 
-                        gameBoard.mapElements[i][j] = UNCHECKED_POINT;
-                        gameBoard.countOfUncheckedPoints++;
+                      gameBoard.mapElements[i][j] = UNCHECKED_POINT;
+                      gameBoard.countOfUncheckedPoints++;
                     }
+                  }
+
+                }
+
             }
         }
 
@@ -218,7 +227,6 @@ GameBoard newGameBoard(int lengthOfBlock, MapSize mapSize, double checkPointDens
     GameBoard gameBoard;
 
     // TODO: 壁をボードに入れる（必須）
-    // TODO: チェックポイントをボードに入れる（必須）
     gameBoard.mapSize = mapSize;
     for (int i = 0; i <= gameBoard.mapSize.x; i++)
         for (int j = 0; j <= gameBoard.mapSize.y; j++) {
