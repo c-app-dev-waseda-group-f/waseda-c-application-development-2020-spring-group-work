@@ -203,6 +203,7 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
 
                 if (gameBoard.mapElements[i][j] == ROAD){
                   //まだ甘いが。。。
+                  //チェックポイントが横並びになるのも防いでしまうが、どうでしょうか
                   if(gameBoard.mapElements[i-1][j]!=ROAD&&gameBoard.mapElements[i+1][j]!=ROAD&&gameBoard.mapElements[i][j-1]!=ROAD&&gameBoard.mapElements[i][j+1]!=ROAD){
                     break;
                   }else{
