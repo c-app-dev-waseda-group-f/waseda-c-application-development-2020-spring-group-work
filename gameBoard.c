@@ -205,7 +205,7 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
                 if (gameBoard.mapElements[i][j] == ROAD){
 
                   if(gameBoard.mapElements[i][j-1]==WALL){
-                    break;
+                      continue;
                   }else{
                     if (rand() % 10001 < (int) (checkPointDensity * 10000)) {
 
