@@ -84,6 +84,8 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
             character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
                 character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            else
+                character.lastMovement = movement;
             if (character.coordinate.y > groundYMax)
                 character.coordinate.y = groundYMax;
             break;
@@ -91,6 +93,8 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
             character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
                 character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            else
+                character.lastMovement = movement;
             if (character.coordinate.y < groundYMin)
                 character.coordinate.y = groundYMin;
             break;
@@ -98,6 +102,8 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
             character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
                 character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            else
+                character.lastMovement = movement;
             if (character.coordinate.x < groundXMin)
                 character.coordinate.x = groundXMin;
             break;
@@ -105,10 +111,13 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
             character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
             if (collidedWithWall(character, gameBoard))
                 character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            else
+                character.lastMovement = movement;
             if (character.coordinate.x > groundXMax)
                 character.coordinate.x = groundXMax;
             break;
     }
+
     return character;
 }
 
@@ -132,36 +141,37 @@ EnemyList newEnemyList(GameBoard gameBoard, Character player) {
 
     EnemyList enemyList;
 
-    // TODO: 自動敵機生成＜自機・壁と被らないように＞
-    CharacterCoordinate c[3] = {
-        {0.0, 0.0, 0.0},
-        {0.0, 0.0, 0.0},
-        {0.0, 0.0, 0.0}
-    };
     double x0 = 0.0;
     double y0 = 0.0;
     for(int i = 0; i < 3; i++){
         //gameboardの右下、右上、左上の順で一機ずつ設定
         int count = 1;
-        if(i == 0) x0 += gameBoard.mapSize.x / 2;
-        if(i == 1) y0 += gameBoard.mapSize.y / 2;
-        if(i == 2) x0 -= gameBoard.mapSize.x / 2;
-        while(count){
+        if (i == 0) x0 += gameBoard.mapSize.x / 2;
+        if (i == 1) y0 += gameBoard.mapSize.y / 2;
+        if (i == 2) x0 -= gameBoard.mapSize.x / 2;
+        while (count) {
             double x = (double)(rand() % (gameBoard.mapSize.x / 2));
             double y = (double)(rand() % (gameBoard.mapSize.y / 2));
-            if(gameBoard.mapElements[(int)(x + x0)][(int)(y + y0)] != WALL){
-                c[i].x = x + x0;
-                c[i].y = y + y0;
+            if (gameBoard.mapElements[(int)(x + x0)][(int)(y + y0)] != WALL) {
+                enemyList.enemies[i].coordinate.x = x + x0;
+                enemyList.enemies[i].coordinate.y = y + y0;
                 count--;
             }
         }
+
+        int r = rand();
+        if (r % 4 == 0) {
+            enemyList.enemies[i].lastMovement = UP;
+        } else if (r % 4 == 1) {
+            enemyList.enemies[i].lastMovement = DOWN;
+        } else if (r % 4 == 2) {
+            enemyList.enemies[i].lastMovement = LEFT;
+        } else if (r % 4 == 3) {
+            enemyList.enemies[i].lastMovement = RIGHT;
+        }
     }
 
-    for (int i = 0; i <= (sizeof(c) / sizeof(c[0])); i++) {
-
-        enemyList.enemies[i].coordinate = c[i];
-    }
-    enemyList.count = (int)(sizeof(c) / sizeof(c[0]));
+    enemyList.count = 3;
 
     return enemyList;
 }

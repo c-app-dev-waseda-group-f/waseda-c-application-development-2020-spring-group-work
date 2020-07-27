@@ -15,7 +15,6 @@
 const int windowWidth = 300;
 const int windowHeight = 300;
 
-GLfloat pos0[] = { 5.0, 0.0, 0.0, 1.0 };
 GLfloat pos1[] = { 0.0, 0.0, 5.0, 1.0 };
 
 GameBoard gameBoard;
@@ -87,7 +86,7 @@ void finishGameIfCollidedWithEnemies() {
     }
 }
 
-void finishGameIfTimelimitReached(){
+void finishGameIfTimeLimitReached(){
 
     char z;
     if (difftime(clock(), startTime) / CLOCKS_PER_SEC > timeLimit) {
@@ -117,7 +116,7 @@ void finishGameIfNeeded() {
 
     finishGameIfAllPointsChecked();
     finishGameIfCollidedWithEnemies();
-    finishGameIfTimelimitReached();
+    finishGameIfTimeLimitReached();
 }
 
 // 自機の移動
@@ -128,21 +127,54 @@ void timerFunc(int value) {
 	gluLookAt(0.0 + player.coordinate.x * gameBoard.lengthOfBlock, -22.0 + player.coordinate.y * gameBoard.lengthOfBlock, 15.0, 0.0 + player.coordinate.x * gameBoard.lengthOfBlock, 0.0 + player.coordinate.y * gameBoard.lengthOfBlock, 1.5, 0.0, 0.0, 1.0);
 
 	// 敵機の移動
-    for (int i = 0; i < enemyList.count; i++) {
-        // TODO: 敵機の移動
-        double Speed = (double)(gameBoard.lengthOfBlock) * 10 / CLOCKS_PER_SEC;
-        srand((unsigned int)time(NULL) + i);
-        if(rand() % 4 == 0){
-            if(gameBoard.mapElements[(int)(enemyList.enemies[i].coordinate.x) + 1][(int)enemyList.enemies[i].coordinate.y] != WALL && enemyList.enemies[i].coordinate.x + 1 < gameBoard.mapSize.x - 1) enemyList.enemies[i].coordinate.x += Speed;
-        }else if(rand() % 4 == 1){
-            if(gameBoard.mapElements[(int)(enemyList.enemies[i].coordinate.x) - 1][(int)enemyList.enemies[i].coordinate.y] != WALL && enemyList.enemies[i].coordinate.x - 1 > 0) enemyList.enemies[i].coordinate.x -= Speed;
-        }else if(rand() % 4 == 2){
-            if(gameBoard.mapElements[(int)enemyList.enemies[i].coordinate.x][(int)(enemyList.enemies[i].coordinate.y) + 1] != WALL && enemyList.enemies[i].coordinate.y + 1 < gameBoard.mapSize.y - 1) enemyList.enemies[i].coordinate.y += Speed;
-        }else if(rand() % 4 == 3){
-            if(gameBoard.mapElements[(int)enemyList.enemies[i].coordinate.x][(int)(enemyList.enemies[i].coordinate.y) - 1] != WALL && enemyList.enemies[i].coordinate.y - 1 > 0) enemyList.enemies[i].coordinate.y -= Speed;
-        }
+	if (((int)clock()) % (CLOCKS_PER_SEC / 50) == 0)
+        for (int i = 0; i < enemyList.count; i++)
+            while (true) {
 
-    }
+                if (((int)clock()) % (CLOCKS_PER_SEC * 10) == 0) {
+                    int r = rand();
+                    if (r % 4 == 0) {
+                        enemyList.enemies[i].lastMovement = UP;
+                    } else if (r % 4 == 1) {
+                        enemyList.enemies[i].lastMovement = DOWN;
+                    } else if (r % 4 == 2) {
+                        enemyList.enemies[i].lastMovement = LEFT;
+                    } else if (r % 4 == 3) {
+                        enemyList.enemies[i].lastMovement = RIGHT;
+                    }
+                }
+
+                int r = rand();
+                if (r % 4 == 0) {
+                    if (enemyList.enemies[i].lastMovement == DOWN) {
+                        continue;
+                    } else {
+                        enemyList.enemies[i] = move(enemyList.enemies[i], UP, gameBoard);
+                        break;
+                    }
+                } else if (r % 4 == 1) {
+                    if (enemyList.enemies[i].lastMovement == UP) {
+                        continue;
+                    } else {
+                        enemyList.enemies[i] = move(enemyList.enemies[i], DOWN, gameBoard);
+                        break;
+                    }
+                } else if (r % 4 == 2) {
+                    if (enemyList.enemies[i].lastMovement == LEFT) {
+                        continue;
+                    } else {
+                        enemyList.enemies[i] = move(enemyList.enemies[i], RIGHT, gameBoard);
+                        break;
+                    }
+                } else if (r % 4 == 3) {
+                    if (enemyList.enemies[i].lastMovement == RIGHT) {
+                        continue;
+                    } else {
+                        enemyList.enemies[i] = move(enemyList.enemies[i], LEFT, gameBoard);
+                        break;
+                    }
+                }
+            }
 
     // チェックポイント検査
     checkPointsInGameBoardIfNeeded();
@@ -192,6 +224,8 @@ void init(void) {
     enemyList = newEnemyList(gameBoard, player);
     timeLimit = gameBoard.mapSize.x * gameBoard.mapSize.y / CHARACTER_UNIT_MOVING_LENGTH * sqrt(CHECK_POINT_DENSITY) * 0.1;
     startTime = clock();
+
+    srand((unsigned int)time(NULL));
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
 	glEnable(GL_DEPTH_TEST);

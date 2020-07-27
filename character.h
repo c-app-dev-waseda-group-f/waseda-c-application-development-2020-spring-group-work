@@ -14,6 +14,7 @@ typedef struct {
 
 typedef struct {
     CharacterCoordinate coordinate;
+    CharacterMovement lastMovement;
 } Character;
 
 typedef struct {
