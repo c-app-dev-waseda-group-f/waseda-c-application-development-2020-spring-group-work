@@ -7,8 +7,8 @@
 
 void drawCheckPoints(GameBoard gameBoard) {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == CHECKED_POINT) {
 
                 double coordinates[5][2];
