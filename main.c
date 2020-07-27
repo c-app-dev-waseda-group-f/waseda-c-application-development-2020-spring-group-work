@@ -53,14 +53,13 @@ void display() {
 
 void continueGame() {
 
-    //TODO:  ゲーム終了後コンティニュー時の処理
     init();
 }
 
 void checkPointsInGameBoardIfNeeded() {
 
-    for (int i = 0; i <= gameBoard.mapSize.x; i ++)
-        for (int j = 0; j <= gameBoard.mapSize.y; j ++)
+    for (int i = 0; i < gameBoard.mapSize.x; i ++)
+        for (int j = 0; j < gameBoard.mapSize.y; j ++)
             if (gameBoard.mapElements[i][j] == UNCHECKED_POINT)
                 if ((fabs(player.coordinate.x - i) < CHECK_POINT_SENSITIVITY) && (fabs(player.coordinate.y - j) < CHECK_POINT_SENSITIVITY)) {
 
@@ -74,9 +73,7 @@ void finishGameIfCollidedWithEnemies() {
 
     char z;
     for (int i = 0; i < enemyList.count; i++) {
-        // TODO: 敵との衝突判定
         if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
-            // TODO: 衝突時のゲームオーバーの処理
             printf("GAME OVER\n");
 	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
 	        printf("continue?(y/n) => ");
@@ -93,7 +90,7 @@ void finishGameIfCollidedWithEnemies() {
 void finishGameIfTimelimitReached(){
 
     char z;
-    if (difftime(clock(), startTime) / 1000 > timeLimit) {
+    if (difftime(clock(), startTime) / CLOCKS_PER_SEC  > timeLimit) {
         // 時間超過によるゲームオーバーの処理
         printf("GAME OVER\n");
 	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
@@ -110,9 +107,8 @@ void finishGameIfTimelimitReached(){
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-        // TODO: ゴール処理(成功)
         printf("GAME CLEAR!!\n");
-        printf("time =>     \n "); // TODO: 所要時間を出力
+        printf("time =>     \n ");
         exit(0);
     }
 }
@@ -140,7 +136,7 @@ void timerFunc(int value) {
     checkPointsInGameBoardIfNeeded();
 
     // 時間計測のリフレッシュ
-    double timeLeft = timeLimit - difftime(clock(), startTime) / 1000;
+    double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC ;
     if (timeLeft < 0)
         timeLeft = 0;
     snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
@@ -182,7 +178,7 @@ void init(void) {
     gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
     player = newPlayer(gameBoard);
     enemyList = newEnemyList(gameBoard, player);
-    timeLimit = 10;
+    timeLimit = gameBoard.mapSize.x * gameBoard.mapSize.y / CHARACTER_UNIT_MOVING_LENGTH * sqrt(CHECK_POINT_DENSITY) * 0.1;
     startTime = clock();
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -211,6 +207,8 @@ void init(void) {
 
 int main(int argc, char *argv[]) {
 
+    glutInitWindowPosition(100, 100);
+    glutInitWindowSize(640, 640);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow(WINDOWS_NAME);
