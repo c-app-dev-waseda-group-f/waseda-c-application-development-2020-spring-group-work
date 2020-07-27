@@ -170,7 +170,7 @@ GameBoard removeAllCheckPoints(GameBoard gameBoard) {
     return gameBoard;
 }
 
-int numberOfRoads(GameBoard gameBoard) {
+int numberOfWhiteRoads(GameBoard gameBoard) {
 
     int sum = 0;
 
@@ -179,7 +179,7 @@ int numberOfRoads(GameBoard gameBoard) {
             if (gameBoard.mapElements[i][j] == ROAD)
                 sum++;
 
-    return sum;
+    return ceiling(sum / 2);
 }
 
 GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
@@ -188,7 +188,7 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
 
     gameBoard = removeAllCheckPoints(gameBoard);
 
-    int numberOfCheckPoints = floor(numberOfRoads(gameBoard) * checkPointDensity　/ 2);
+    int numberOfCheckPoints = floor(numberOfWhiteRoads(gameBoard) * checkPointDensity);
 
     while (gameBoard.countOfUncheckedPoints < numberOfCheckPoints)
         for (int i = 0; i < gameBoard.mapSize.x; i++) {
