@@ -188,7 +188,7 @@ GameBoard  resetCheckPoints(GameBoard gameBoard, double checkPointDensity) {
 
     gameBoard = removeAllCheckPoints(gameBoard);
 
-    int numberOfCheckPoints = floor(numberOfRoads(gameBoard) * checkPointDensity);
+    int numberOfCheckPoints = floor(numberOfRoads(gameBoard) * checkPointDensity　/ 2);
 
     while (gameBoard.countOfUncheckedPoints < numberOfCheckPoints)
         for (int i = 0; i < gameBoard.mapSize.x; i++) {
