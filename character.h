@@ -27,6 +27,8 @@ void drawEnemies(EnemyList enemyList, double radius, GameBoard gameBoard);
 
 Character move(Character character, CharacterMovement movement, GameBoard gameBoard);
 
+Character moveForEnemy(Character character, CharacterMovement movement, GameBoard gameBoard);
+
 Character newPlayer(GameBoard gameBoard);
 
 EnemyList newEnemyList(GameBoard gameBoard, Character player);

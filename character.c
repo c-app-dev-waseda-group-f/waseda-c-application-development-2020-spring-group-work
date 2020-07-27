@@ -112,6 +112,38 @@ Character move(Character character, CharacterMovement movement, GameBoard gameBo
     return character;
 }
 
+Character moveForEnemy(Character character, CharacterMovement movement, GameBoard gameBoard) {
+
+    int groundXMin = 0;
+    int groundXMax = (gameBoard.mapSize.x - 1) * gameBoard.lengthOfBlock;
+    int groundYMin = 0;
+    int groundYMax = (gameBoard.mapSize.y - 1) * gameBoard.lengthOfBlock;
+
+    switch (movement) {
+        case UP:
+            character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            if (collidedWithWall(character, gameBoard))
+                character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            break;
+        case DOWN:
+            character.coordinate.y -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            if (collidedWithWall(character, gameBoard))
+                character.coordinate.y += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            break;
+        case LEFT:
+            character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            if (collidedWithWall(character, gameBoard))
+                character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            break;
+        case RIGHT:
+            character.coordinate.x += CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            if (collidedWithWall(character, gameBoard))
+                character.coordinate.x -= CHARACTER_UNIT_MOVING_LENGTH / LENGTH_OF_MAP_BLOCK;
+            break;
+    }
+    return character;
+}
+
 Character newPlayer(GameBoard gameBoard) {
 
     Character player;
