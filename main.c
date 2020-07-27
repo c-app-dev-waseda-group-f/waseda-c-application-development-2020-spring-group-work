@@ -112,7 +112,7 @@ void finishGameIfAllPointsChecked() {
     if (gameBoard.countOfUncheckedPoints == 0) {
         // TODO: ゴール処理(成功)
         printf("GAME CLEAR!!\n");
-        printf("time =>     \n "); // TODO: 所要時間を出力
+        printf("CLEAR TIME =>  %lf [sec]  \n ", difftime(clock(), startTime) * 0.000001); // TODO: 所要時間を出力
         exit(0);
     }
 }
