@@ -12,6 +12,10 @@
 
 ///Githubわかんね
 
+typedef enum {
+    PLAYING, MENU
+} GameStatus;
+
 const int windowWidth = 300;
 const int windowHeight = 300;
 
@@ -24,6 +28,8 @@ EnemyList enemyList;
 time_t startTime;
 double timeLimit;
 char readableElapsedTimeInfo[30] = "";
+
+GameStatus status;
 
 void init(void);
 
@@ -46,13 +52,36 @@ void display() {
 	drawText("Copyright 2020 Group F All Rights Reserved.", x, y, windowHeight, windowWidth);
 	drawText(readableElapsedTimeInfo, x, 2 * y, windowHeight, windowWidth);
 
+	if (status==MENU) {
+        char readableScoreInfo[30];
+        snprintf(readableScoreInfo, sizeof(readableScoreInfo) / sizeof(char), "Score: %d/%d", gameBoard.countOfCheckedPoints, gameBoard.countOfCheckedPoints + gameBoard.countOfUncheckedPoints);
+        drawText(readableScoreInfo, x, y * 3, windowHeight, windowWidth);
+        drawText("Press END key to quit.", x, y * 4, windowHeight, windowWidth);
+        drawText("Press HOME key to retry.", x, y * 5, windowHeight, windowWidth);
+    }
+
 	glPopMatrix();
 	glutSwapBuffers();
 }
 
-void continueGame() {
+void restartGame() {
 
-    init();
+    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
+    player = newPlayer(gameBoard);
+    enemyList = newEnemyList(gameBoard, player);
+    timeLimit = gameBoard.mapSize.x * gameBoard.mapSize.y / CHARACTER_UNIT_MOVING_LENGTH * sqrt(CHECK_POINT_DENSITY) * 0.1;
+    startTime = clock();
+    status = PLAYING;
+}
+
+void quitGame() {
+
+    exit(0);
+}
+
+void breakGame() {
+
+    status = MENU;
 }
 
 void checkPointsInGameBoardIfNeeded() {
@@ -70,45 +99,24 @@ void checkPointsInGameBoardIfNeeded() {
 
 void finishGameIfCollidedWithEnemies() {
 
-    char z;
     for (int i = 0; i < enemyList.count; i++) {
         if (sqrt(pow(player.coordinate.x - enemyList.enemies[i].coordinate.x, 2) + pow(player.coordinate.y - enemyList.enemies[i].coordinate.y, 2)) < 0.9) {  // ここで感度調整が可能です。
-            printf("GAME OVER\n");
-	        printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
-	        printf("continue?(y/n) => ");
-            scanf(" %c",&z);
-            if (z=='y') {
-                continueGame();
-            } else {
-                exit(0);
-            }
+            breakGame();
         }
     }
 }
 
 void finishGameIfTimeLimitReached(){
 
-    char z;
     if (difftime(clock(), startTime) / CLOCKS_PER_SEC > timeLimit) {
-        // 時間超過によるゲームオーバーの処理
-        printf("GAME OVER\n");
-	    printf("Score: %d/%d\n",gameBoard.countOfCheckedPoints,gameBoard.countOfCheckedPoints+gameBoard.countOfUncheckedPoints);
-	    printf("continue?(y/n) => ");
-        scanf(" %c",&z);
-        if (z=='y') {
-	        continueGame();
-        } else {
-            exit(0);
-        }
+        breakGame();
     }
 }
 
 void finishGameIfAllPointsChecked() {
 
     if (gameBoard.countOfUncheckedPoints == 0) {
-        printf("GAME CLEAR!!\n");
-        printf("CLEAR TIME =>  %lf [sec]  \n ", difftime(clock(), startTime) / CLOCKS_PER_SEC);
-        exit(0);
+        breakGame();
     }
 }
 
@@ -122,71 +130,77 @@ void finishGameIfNeeded() {
 // 自機の移動
 void timerFunc(int value) {
 
-	// 視点を移動
-	glLoadIdentity();
-	gluLookAt(0.0 + player.coordinate.x * gameBoard.lengthOfBlock, -22.0 + player.coordinate.y * gameBoard.lengthOfBlock, 15.0, 0.0 + player.coordinate.x * gameBoard.lengthOfBlock, 0.0 + player.coordinate.y * gameBoard.lengthOfBlock, 1.5, 0.0, 0.0, 1.0);
+    if (status == PLAYING) {
 
-	// 敵機の移動
-	if (((int)clock()) % (CLOCKS_PER_SEC / 50) == 0)
-        for (int i = 0; i < enemyList.count; i++)
-            while (true) {
+        // 視点を移動
+        glLoadIdentity();
+        gluLookAt(0.0 + player.coordinate.x * gameBoard.lengthOfBlock,
+                  -22.0 + player.coordinate.y * gameBoard.lengthOfBlock, 15.0,
+                  0.0 + player.coordinate.x * gameBoard.lengthOfBlock, 0.0 + player.coordinate.y * gameBoard.lengthOfBlock,
+                  1.5, 0.0, 0.0, 1.0);
 
-                if (((int)clock()) % (CLOCKS_PER_SEC * 10) == 0) {
+        // 敵機の移動
+        if (((int) clock()) % (CLOCKS_PER_SEC / 50) == 0)
+            for (int i = 0; i < enemyList.count; i++)
+                while (true) {
+
+                    if (((int) clock()) % (CLOCKS_PER_SEC * 10) == 0) {
+                        int r = rand();
+                        if (r % 4 == 0) {
+                            enemyList.enemies[i].lastMovement = UP;
+                        } else if (r % 4 == 1) {
+                            enemyList.enemies[i].lastMovement = DOWN;
+                        } else if (r % 4 == 2) {
+                            enemyList.enemies[i].lastMovement = LEFT;
+                        } else if (r % 4 == 3) {
+                            enemyList.enemies[i].lastMovement = RIGHT;
+                        }
+                    }
+
                     int r = rand();
                     if (r % 4 == 0) {
-                        enemyList.enemies[i].lastMovement = UP;
+                        if (enemyList.enemies[i].lastMovement == DOWN) {
+                            continue;
+                        } else {
+                            enemyList.enemies[i] = move(enemyList.enemies[i], UP, gameBoard);
+                            break;
+                        }
                     } else if (r % 4 == 1) {
-                        enemyList.enemies[i].lastMovement = DOWN;
+                        if (enemyList.enemies[i].lastMovement == UP) {
+                            continue;
+                        } else {
+                            enemyList.enemies[i] = move(enemyList.enemies[i], DOWN, gameBoard);
+                            break;
+                        }
                     } else if (r % 4 == 2) {
-                        enemyList.enemies[i].lastMovement = LEFT;
+                        if (enemyList.enemies[i].lastMovement == LEFT) {
+                            continue;
+                        } else {
+                            enemyList.enemies[i] = move(enemyList.enemies[i], RIGHT, gameBoard);
+                            break;
+                        }
                     } else if (r % 4 == 3) {
-                        enemyList.enemies[i].lastMovement = RIGHT;
+                        if (enemyList.enemies[i].lastMovement == RIGHT) {
+                            continue;
+                        } else {
+                            enemyList.enemies[i] = move(enemyList.enemies[i], LEFT, gameBoard);
+                            break;
+                        }
                     }
                 }
 
-                int r = rand();
-                if (r % 4 == 0) {
-                    if (enemyList.enemies[i].lastMovement == DOWN) {
-                        continue;
-                    } else {
-                        enemyList.enemies[i] = move(enemyList.enemies[i], UP, gameBoard);
-                        break;
-                    }
-                } else if (r % 4 == 1) {
-                    if (enemyList.enemies[i].lastMovement == UP) {
-                        continue;
-                    } else {
-                        enemyList.enemies[i] = move(enemyList.enemies[i], DOWN, gameBoard);
-                        break;
-                    }
-                } else if (r % 4 == 2) {
-                    if (enemyList.enemies[i].lastMovement == LEFT) {
-                        continue;
-                    } else {
-                        enemyList.enemies[i] = move(enemyList.enemies[i], RIGHT, gameBoard);
-                        break;
-                    }
-                } else if (r % 4 == 3) {
-                    if (enemyList.enemies[i].lastMovement == RIGHT) {
-                        continue;
-                    } else {
-                        enemyList.enemies[i] = move(enemyList.enemies[i], LEFT, gameBoard);
-                        break;
-                    }
-                }
-            }
+        // チェックポイント検査
+        checkPointsInGameBoardIfNeeded();
 
-    // チェックポイント検査
-    checkPointsInGameBoardIfNeeded();
+        // 時間計測のリフレッシュ
+        double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC;
+        if (timeLeft < 0)
+            timeLeft = 0;
+        snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
 
-    // 時間計測のリフレッシュ
-    double timeLeft = timeLimit - difftime(clock(), startTime) / CLOCKS_PER_SEC;
-    if (timeLeft < 0)
-        timeLeft = 0;
-    snprintf(readableElapsedTimeInfo, sizeof(readableElapsedTimeInfo) / sizeof(char), "Time Left: %.3fs", timeLeft);
-
-    // ゲーム終了検査
-    finishGameIfNeeded();
+        // ゲーム終了検査
+        finishGameIfNeeded();
+    }
 
     glutTimerFunc(1, timerFunc, 0);
 }
@@ -196,16 +210,34 @@ void mySpecialFunc(int key, int x, int y) {
 
     switch (key) {
         case GLUT_KEY_UP:
-            player = move(player, UP, gameBoard);
+            if (status == PLAYING) {
+                player = move(player, UP, gameBoard);
+            }
             break;
         case GLUT_KEY_LEFT:
-            player = move(player, LEFT, gameBoard);
+            if (status == PLAYING) {
+                player = move(player, LEFT, gameBoard);
+            }
             break;
         case GLUT_KEY_RIGHT:
-            player = move(player, RIGHT, gameBoard);
+            if (status == PLAYING) {
+                player = move(player, RIGHT, gameBoard);
+            }
             break;
         case GLUT_KEY_DOWN:
-            player = move(player, DOWN, gameBoard);
+            if (status == PLAYING) {
+                player = move(player, DOWN, gameBoard);
+            }
+            break;
+        case GLUT_KEY_HOME:
+            if (status == MENU) {
+                restartGame();
+            }
+            break;
+        case GLUT_KEY_END:
+            if (status == MENU) {
+                quitGame();
+            }
             break;
 	    default:
 		    break;
@@ -218,12 +250,6 @@ void idle(void) {
 }
 
 void init(void) {
-
-    gameBoard = newGameBoard(LENGTH_OF_MAP_BLOCK, (MapSize){MAP_SIZE_X, MAP_SIZE_Y}, CHECK_POINT_DENSITY);
-    player = newPlayer(gameBoard);
-    enemyList = newEnemyList(gameBoard, player);
-    timeLimit = gameBoard.mapSize.x * gameBoard.mapSize.y / CHARACTER_UNIT_MOVING_LENGTH * sqrt(CHECK_POINT_DENSITY) * 0.1;
-    startTime = clock();
 
     srand((unsigned int)time(NULL));
 
@@ -260,6 +286,7 @@ int main(int argc, char *argv[]) {
 	glutCreateWindow(WINDOWS_NAME);
 	glutDisplayFunc(display);
 	init();
+	restartGame();
 	glutMainLoop();
 	return 0;
 }
